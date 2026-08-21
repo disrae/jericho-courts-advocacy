@@ -1,4 +1,7 @@
 .venv/
+node_modules/
+.next/
+next-env.d.ts
 __pycache__/
 *.pyc
 .env
@@ -7,3 +10,4 @@ __pycache__/
 data/raw/*.html
 data/photos/
 *.log
+.vercel

@@ -22,6 +22,24 @@ This repo is the operating system for research, data, outreach, and Park Board e
 - Park Board explicitly says pop-ups are **temporary** pending a Sport Court Strategy
 - [Vancouver Pickleball Association MORE campaign](https://vancouverpickleball.ca/more-campaign/) already asks for Jericho permanence by **spring 2026**
 
+## Website
+
+Public advocacy site built with Next.js:
+
+```bash
+npm install
+npm run dev    # http://localhost:3000
+npm run build
+```
+
+Pages: home, `/facts`, `/action`
+
+Deploy to Vercel:
+
+```bash
+npx vercel deploy --prod
+```
+
 ## Repo layout
 
 ```
