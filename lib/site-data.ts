@@ -59,3 +59,31 @@ export const links = [
     href: "https://parkboardmeetings.vancouver.ca/",
   },
 ] as const;
+
+export const pushback = [
+  {
+    q: "It's only temporary until the strategy.",
+    a: "Three+ years of daily use is a pilot with results. Delay has a cost: portable gear, repainting, frustrated players.",
+  },
+  {
+    q: "Tennis players will lose out.",
+    a: "The proposal keeps tennis courts and upgrades the already-dedicated pop-up slab — no surprise loss.",
+  },
+  {
+    q: "Lighting will bother neighbours.",
+    a: "Pilot shielded LEDs, 9pm curfew, and consultation before install.",
+  },
+  {
+    q: "Solar is gimmicky.",
+    a: "Solar reduces grid trenching cost, supports climate goals, and extends hours without a new building.",
+  },
+] as const;
+
+export const gaps = [
+  ["Surface quality", "Aging asphalt, pop-up lines", "Full resurface + dedicated PB lines"],
+  ["Nets", "Portable lockbox", "Fixed permanent net systems"],
+  ["Permanence", "Temporary designation", "Capital project + permanent allocation"],
+  ["Evening play", "None", "Solar LED with curfew (pilot)"],
+] as const;
+
+export const parkBoardEmail = "parkboard@vancouver.ca";

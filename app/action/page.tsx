@@ -1,24 +1,15 @@
 import Link from "next/link";
+import { ActionBar } from "@/components/action-bar";
+import { ShareLineBox } from "@/components/share-line";
 import { SectionHeading } from "@/components/site-shell";
+import { parkBoardEmail } from "@/lib/site-data";
 
-const pushback = [
-  {
-    q: "It's only temporary until the strategy.",
-    a: "Three+ years of daily use is a pilot with results. Delay has a cost: portable gear, repainting, frustrated players.",
-  },
-  {
-    q: "Tennis players will lose out.",
-    a: "The proposal keeps tennis courts and upgrades the already-dedicated pop-up slab — no surprise loss.",
-  },
-  {
-    q: "Lighting will bother neighbours.",
-    a: "Pilot shielded LEDs, 9pm curfew, and consultation before install.",
-  },
-  {
-    q: "Solar is gimmicky.",
-    a: "Solar reduces grid trenching cost, supports climate goals, and extends hours without a new building.",
-  },
-] as const;
+const mailtoSubject = encodeURIComponent(
+  "Fund permanent Jericho Beach courts",
+);
+const mailtoBody = encodeURIComponent(
+  "Dear Commissioners,\n\nI support permanent, high-quality court infrastructure at Jericho Beach Park: resurfacing, fixed nets, preserved tennis access, a solar lighting pilot, and a public Sport Court Strategy timeline with Jericho in tranche 1.\n\nJericho is one of the city's busiest court sites yet still runs on temporary pop-up infrastructure. Please fund permanent upgrades in the next capital cycle.\n\nSincerely,\n[Your name]\n[Your address]",
+);
 
 export default function ActionPage() {
   return (
@@ -26,19 +17,28 @@ export default function ActionPage() {
       <SectionHeading
         eyebrow="Take action"
         title="Help get Jericho courts funded"
-        description="Agents can draft; humans deliver. Pick one channel and go."
+        description="Pick one. Takes 5 minutes."
       />
 
+      <div className="mt-10">
+        <ActionBar />
+      </div>
+
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        <article className="rounded-2xl border border-slate-200 bg-white p-6">
+        <article id="email" className="rounded-2xl border border-slate-200 bg-white p-6">
           <h3 className="text-lg font-semibold text-slate-900">1. Email the Park Board</h3>
           <p className="mt-3 leading-relaxed text-slate-600">
-            Send a short letter to commissioners with the five concrete asks. Customize
-            with your name and Vancouver address.
+            Pre-filled draft — add your name and Vancouver address before sending.
           </p>
+          <a
+            href={`mailto:${parkBoardEmail}?subject=${mailtoSubject}&body=${mailtoBody}`}
+            className="mt-4 inline-flex rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
+          >
+            Open email draft
+          </a>
           <details className="mt-4 rounded-xl bg-slate-50 p-4">
             <summary className="cursor-pointer font-medium text-emerald-800">
-              Letter template
+              Full letter template
             </summary>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-700">
               <p>Dear Commissioners,</p>
@@ -81,8 +81,8 @@ export default function ActionPage() {
         <article className="rounded-2xl border border-slate-200 bg-white p-6 lg:col-span-2">
           <h3 className="text-lg font-semibold text-slate-900">3. Join the coalition</h3>
           <p className="mt-3 leading-relaxed text-slate-600">
-            The Vancouver Pickleball Association&apos;s MORE campaign is already pushing
-            for Jericho permanence by spring 2026. Align rather than duplicate.
+            VPA&apos;s MORE campaign pushes Jericho permanence by spring 2026 — 1,486+
+            petition signers. Align, don&apos;t duplicate.
           </p>
           <a
             href="https://vancouverpickleball.ca/more-campaign/"
@@ -95,30 +95,17 @@ export default function ActionPage() {
         </article>
       </div>
 
-      <div className="mt-16">
-        <h3 className="text-xl font-semibold text-slate-900">Answers to pushback</h3>
-        <dl className="mt-6 space-y-4">
-          {pushback.map((item) => (
-            <div key={item.q} className="rounded-2xl border border-slate-200 p-5">
-              <dt className="font-medium text-slate-900">&ldquo;{item.q}&rdquo;</dt>
-              <dd className="mt-2 leading-relaxed text-slate-600">{item.a}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-
-      <div className="mt-16 rounded-2xl border border-dashed border-emerald-900/20 bg-emerald-50/60 p-6">
-        <p className="font-medium text-slate-900">For agents & collaborators</p>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">
-          Research, scrapers, and task backlog live in the project repo. This site is the
-          public-facing campaign front door.
-        </p>
-        <Link
-          href="/facts"
-          className="mt-4 inline-flex text-sm font-semibold text-emerald-800 underline underline-offset-4"
-        >
-          Review the facts →
-        </Link>
+      <div className="mt-16 space-y-6">
+        <ShareLineBox />
+        <div className="rounded-2xl border border-dashed border-emerald-900/20 bg-emerald-50/60 p-6">
+          <p className="font-medium text-slate-900">Need ammo first?</p>
+          <Link
+            href="/why"
+            className="mt-2 inline-flex text-sm font-semibold text-emerald-800 underline underline-offset-4"
+          >
+            Read why Jericho →
+          </Link>
+        </div>
       </div>
     </div>
   );

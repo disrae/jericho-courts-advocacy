@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ActionBar } from "@/components/action-bar";
 import { SectionHeading, StatCard } from "@/components/site-shell";
 import { asks, getBaseline, goals } from "@/lib/site-data";
 
@@ -21,19 +22,8 @@ export default function HomePage() {
             Park Board to fund permanent upgrades: resurfacing, fixed nets, and a
             solar lighting pilot.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/action"
-              className="rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
-            >
-              Take action
-            </Link>
-            <Link
-              href="/facts"
-              className="rounded-full border border-emerald-900/15 bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50"
-            >
-              See the facts
-            </Link>
+          <div className="mt-8">
+            <ActionBar compact />
           </div>
         </div>
       </section>

@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { ActionBar } from "@/components/action-bar";
 
 const nav = [
   { href: "/", label: "Home" },
-  { href: "/facts", label: "Facts" },
+  { href: "/why", label: "Why" },
   { href: "/action", label: "Take action" },
 ] as const;
 
@@ -18,7 +19,7 @@ export function SiteHeader() {
             Jericho Courts
           </span>
         </Link>
-        <nav className="flex gap-1 sm:gap-2">
+        <nav className="hidden items-center gap-1 sm:flex sm:gap-2">
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -29,6 +30,12 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
+        <Link
+          href="/action#email"
+          className="rounded-full bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 sm:px-4"
+        >
+          Email
+        </Link>
       </div>
     </header>
   );
