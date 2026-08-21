@@ -1,0 +1,25 @@
+{
+  "scraped_at": "2026-08-21T05:15:00+00:00",
+  "source": "https://parkboardmeetings.vancouver.ca/",
+  "keywords": "jericho|pickleball|tennis|court|sport court|resurfac|lighting|solar",
+  "match_count": 4,
+  "matches": [
+    {
+      "title": "Pop-up pickleball courts extended — Jericho & Champlain",
+      "url": "https://vancouver.ca/news-calendar/vancouver-picklers-get-a-double-bounce-as-pop-up-court-project-is-extended.aspx"
+    },
+    {
+      "title": "Court sports asset needs (Park Board PDF)",
+      "url": "https://vancouver.ca/parks-recreation-culture/63720.aspx"
+    },
+    {
+      "title": "Jericho Beach park page",
+      "url": "https://vancouver.ca/parks-recreation-culture/jericho-beach.aspx"
+    },
+    {
+      "title": "VPA MORE campaign — Jericho permanent by spring 2026",
+      "url": "https://vancouverpickleball.ca/more-campaign/"
+    }
+  ],
+  "scrape_notes": "Automated scrape returns 403 from cloud IPs. Seeded with known sources; re-run scripts/scrape_park_board_meetings.py locally to refresh meeting agendas."
+}
