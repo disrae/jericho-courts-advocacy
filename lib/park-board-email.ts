@@ -13,9 +13,7 @@ Sincerely,
 [Your address]`;
 
 export function buildMailtoUrl(): string {
-  const params = new URLSearchParams({
-    subject: EMAIL_SUBJECT,
-    body: EMAIL_BODY,
-  });
-  return `mailto:${PARK_BOARD_EMAIL}?${params.toString()}`;
+  const subject = encodeURIComponent(EMAIL_SUBJECT);
+  const body = encodeURIComponent(EMAIL_BODY);
+  return `mailto:${PARK_BOARD_EMAIL}?subject=${subject}&body=${body}`;
 }
