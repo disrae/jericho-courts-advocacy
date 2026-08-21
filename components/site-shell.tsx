@@ -30,10 +30,7 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <a
-          href={buildMailtoUrl()}
-          className="rounded-full bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 sm:px-4"
-        >
+        <a href={buildMailtoUrl()} className="btn-primary px-3 py-2 sm:px-4">
           Email
         </a>
       </div>

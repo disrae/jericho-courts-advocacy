@@ -22,16 +22,10 @@ export default function HomePage() {
             solar lighting pilot.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/action"
-              className="rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
-            >
+            <Link href="/action" className="btn-primary">
               Take action
             </Link>
-            <Link
-              href="/facts"
-              className="rounded-full border border-emerald-900/15 bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50"
-            >
+            <Link href="/facts" className="btn-secondary">
               See the facts
             </Link>
           </div>

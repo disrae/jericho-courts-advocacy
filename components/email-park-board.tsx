@@ -31,16 +31,13 @@ export function EmailParkBoard() {
       </p>
 
       <div className="mt-4 flex flex-wrap gap-3">
-        <a
-          href={mailto}
-          className="inline-flex rounded-full bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
-        >
+        <a href={mailto} className="btn-primary">
           Open in mail app
         </a>
         <button
           type="button"
           onClick={() => void copyTemplate()}
-          className="inline-flex rounded-full border border-emerald-900/15 bg-white px-5 py-3 text-sm font-semibold text-emerald-900 hover:bg-emerald-50"
+          className="btn-secondary"
         >
           {copied ? "Copied!" : "Copy letter text"}
         </button>

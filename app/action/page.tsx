@@ -64,7 +64,7 @@ export default function ActionPage() {
             href="https://vancouverpickleball.ca/more-campaign/"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex rounded-full bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
+            className="mt-4 btn-primary px-4 py-2"
           >
             VPA MORE campaign
           </a>
