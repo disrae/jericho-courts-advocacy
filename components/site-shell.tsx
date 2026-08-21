@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buildMailtoUrl } from "@/lib/park-board-email";
 
 const nav = [
   { href: "/", label: "Home" },
@@ -29,6 +30,12 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
+        <a
+          href={buildMailtoUrl()}
+          className="rounded-full bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 sm:px-4"
+        >
+          Email
+        </a>
       </div>
     </header>
   );
