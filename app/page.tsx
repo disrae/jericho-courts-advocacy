@@ -13,7 +13,7 @@ export default function HomePage() {
             Jericho Beach Park
           </p>
           <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
-            Permanent courts. Proper surfaces. Lights when it matters.
+            Permanent courts. Proper surfaces. Lights.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
             Jericho is one of Vancouver&apos;s busiest outdoor court sites — full
