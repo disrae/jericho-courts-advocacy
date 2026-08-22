@@ -1,0 +1,65 @@
+[
+  {
+    "id": "worn-net",
+    "file": "worn-net.jpg",
+    "alt": "Close-up of a worn portable pickleball net with frayed top binding",
+    "caption": "Portable nets break often. Bindings fray and hardware wears out.",
+    "objectPosition": "center 45%",
+    "layout": "feature",
+    "category": "nets"
+  },
+  {
+    "id": "broken-net-tape",
+    "file": "broken-net-tape.jpg",
+    "alt": "Portable net post wrapped in tape at the center strap",
+    "caption": "Nets are often broken or held together with tape until replaced.",
+    "objectPosition": "center 35%",
+    "layout": "grid",
+    "category": "nets"
+  },
+  {
+    "id": "portable-net-lines",
+    "file": "portable-net-lines.jpg",
+    "alt": "Portable pickleball net on asphalt with overlapping white and red court lines",
+    "caption": "Pop-up conversion: pickleball lines over tennis courts — not a permanent design.",
+    "objectPosition": "center 50%",
+    "layout": "grid",
+    "category": "courts"
+  },
+  {
+    "id": "courts-busy",
+    "file": "courts-busy.jpg",
+    "alt": "Multiple pickleball games underway on outdoor courts at Jericho",
+    "caption": "Courts are almost always busy during playable hours.",
+    "objectPosition": "center 40%",
+    "layout": "wide",
+    "category": "demand"
+  },
+  {
+    "id": "active-play",
+    "file": "active-play.jpg",
+    "alt": "Player on a Jericho court beside a portable net and numbered fence",
+    "caption": "Players depend on lockbox portable nets — not fixed permanent posts.",
+    "objectPosition": "center 55%",
+    "layout": "grid",
+    "category": "demand"
+  },
+  {
+    "id": "evening-demand",
+    "file": "evening-demand.jpg",
+    "alt": "Spectators in chairs watching pickleball at dusk with no court lighting",
+    "caption": "No court lighting. Play and demand continue into the evening.",
+    "objectPosition": "center 35%",
+    "layout": "hero",
+    "category": "lighting"
+  },
+  {
+    "id": "extra-01",
+    "file": "extra-01.jpg",
+    "alt": "Jericho Beach pickleball courts",
+    "caption": "Jericho Beach Park courts — documented by players on site.",
+    "objectPosition": "center 50%",
+    "layout": "grid",
+    "category": "courts"
+  }
+]

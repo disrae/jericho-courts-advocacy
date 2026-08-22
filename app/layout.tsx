@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { TemporaryDaysCounter } from "@/components/temporary-days-counter";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import "./globals.css";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen antialiased">
+        <TemporaryDaysCounter />
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />

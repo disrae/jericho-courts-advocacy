@@ -90,10 +90,10 @@ export default function ActionPage() {
           public-facing campaign front door.
         </p>
         <Link
-          href="/facts"
+          href="/why"
           className="mt-4 inline-flex text-sm font-semibold text-emerald-800 underline underline-offset-4"
         >
-          Review the facts →
+          See why Jericho →
         </Link>
       </div>
     </div>

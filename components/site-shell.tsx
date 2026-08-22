@@ -3,7 +3,7 @@ import { buildMailtoUrl } from "@/lib/park-board-email";
 
 const nav = [
   { href: "/", label: "Home" },
-  { href: "/facts", label: "Facts" },
+  { href: "/why", label: "Why" },
   { href: "/action", label: "Take action" },
 ] as const;
 

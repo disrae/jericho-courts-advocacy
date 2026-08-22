@@ -25,8 +25,8 @@ export default function HomePage() {
             <Link href="/action" className="btn-primary">
               Take action
             </Link>
-            <Link href="/facts" className="btn-secondary">
-              See the facts
+            <Link href="/why" className="btn-secondary">
+              See why Jericho
             </Link>
           </div>
         </div>
