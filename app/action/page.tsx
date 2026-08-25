@@ -1,23 +1,29 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import { EmailParkBoard } from "@/components/email-park-board";
 import { SectionHeading } from "@/components/site-shell";
+
+export const metadata: Metadata = {
+  title: "Take action",
+  description:
+    "Email the Park Board, speak at a meeting, or join the Vancouver Pickleball Association's campaign for permanent Jericho courts.",
+};
 
 const pushback = [
   {
     q: "It's only temporary until the strategy.",
-    a: "Three+ years of daily use is a pilot with results. Delay has a cost: portable gear, repainting, frustrated players.",
+    a: "More than three years of daily use is a completed pilot. Delay has a cost: portable gear, extra maintenance, and courts that never catch up to demand.",
   },
   {
     q: "Tennis players will lose out.",
-    a: "The proposal keeps tennis courts and upgrades the already-dedicated pop-up slab — no surprise loss.",
+    a: "The proposal keeps tennis courts and upgrades the already-dedicated pop-up slab. Nobody is asking for a surprise conversion.",
   },
   {
     q: "Lighting will bother neighbours.",
-    a: "Pilot shielded LEDs, 9pm curfew, and consultation before install.",
+    a: "Start with a pilot: shielded LEDs, a 9pm curfew, and consultation before anything is installed.",
   },
   {
     q: "Solar is gimmicky.",
-    a: "Solar reduces grid trenching cost, supports climate goals, and extends hours without a new building.",
+    a: "Solar cuts the cost of trenching to the grid, supports the city's climate goals, and extends playable hours without a new building.",
   },
 ] as const;
 
@@ -27,7 +33,7 @@ export default function ActionPage() {
       <SectionHeading
         eyebrow="Take action"
         title="Help get Jericho courts funded"
-        description="Pick one. Email takes about 2 minutes."
+        description="Pick one. An email takes about two minutes."
       />
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
@@ -36,13 +42,14 @@ export default function ActionPage() {
         <article className="rounded-2xl border border-slate-200 bg-white p-6">
           <h3 className="text-lg font-semibold text-slate-900">2. Speak at a meeting</h3>
           <p className="mt-3 leading-relaxed text-slate-600">
-            Register to depute (3 minutes) when court or capital items are on the agenda.
+            Register to speak for three minutes when court or capital items are on the
+            Park Board agenda.
           </p>
           <p className="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-relaxed text-emerald-950">
-            Jericho Beach has eight pickleball courts on a temporary basis since 2022.
-            They&apos;re full every day, but still use portable nets and old asphalt,
-            with no lights. Fund Jericho permanent courts in the next capital cycle —
-            with resurfacing, fixed nets, and a solar lighting pilot.
+            Jericho Beach has eight pickleball courts that have run as a pop-up since
+            2023. They are full every day, yet players still use portable nets and aging
+            asphalt, with no lights. Please fund permanent Jericho courts in the next
+            capital cycle — resurfacing, fixed nets, and a solar lighting pilot.
           </p>
           <a
             href="https://parkboardmeetings.vancouver.ca/"
@@ -57,8 +64,8 @@ export default function ActionPage() {
         <article className="rounded-2xl border border-slate-200 bg-white p-6 lg:col-span-2">
           <h3 className="text-lg font-semibold text-slate-900">3. Join the coalition</h3>
           <p className="mt-3 leading-relaxed text-slate-600">
-            The Vancouver Pickleball Association&apos;s MORE campaign is already pushing
-            for Jericho permanence by spring 2026. Align rather than duplicate.
+            The Vancouver Pickleball Association&apos;s MORE campaign is already calling
+            for Jericho permanence by spring 2026. Join that effort.
           </p>
           <a
             href="https://vancouverpickleball.ca/more-campaign/"
@@ -72,7 +79,7 @@ export default function ActionPage() {
       </div>
 
       <div className="mt-16">
-        <h3 className="text-xl font-semibold text-slate-900">Answers to pushback</h3>
+        <h3 className="text-xl font-semibold text-slate-900">What we hear</h3>
         <dl className="mt-6 space-y-4">
           {pushback.map((item) => (
             <div key={item.q} className="rounded-2xl border border-slate-200 p-5">
@@ -82,20 +89,7 @@ export default function ActionPage() {
           ))}
         </dl>
       </div>
-
-      <div className="mt-16 rounded-2xl border border-dashed border-emerald-900/20 bg-emerald-50/60 p-6">
-        <p className="font-medium text-slate-900">For agents & collaborators</p>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">
-          Research, scrapers, and task backlog live in the project repo. This site is the
-          public-facing campaign front door.
-        </p>
-        <Link
-          href="/facts"
-          className="mt-4 inline-flex text-sm font-semibold text-emerald-800 underline underline-offset-4"
-        >
-          Review the facts →
-        </Link>
-      </div>
     </div>
   );
 }
+

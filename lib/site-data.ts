@@ -8,33 +8,37 @@ export function getBaseline(): Baseline {
 
 export const goals = [
   {
-    priority: "P1",
+    priority: "Essential",
     title: "Permanent infrastructure",
-    detail: "End the pop-up designation. Fixed courts at Jericho, not portable lockbox nets.",
+    detail:
+      "End the pop-up designation. Fixed courts at Jericho, not portable nets from a lockbox.",
   },
   {
-    priority: "P1",
+    priority: "Essential",
     title: "Proper surfaces",
-    detail: "Resurface aging asphalt to Park Board quality — acrylic or plexipave-class.",
+    detail:
+      "Resurface aging asphalt to a durable acrylic court surface, built to Park Board standard.",
   },
   {
-    priority: "P2",
-    title: "Fixed nets & windscreens",
-    detail: "Permanent net systems and ball barriers so players stop hauling gear.",
+    priority: "Upgrade",
+    title: "Fixed nets and windscreens",
+    detail:
+      "Permanent net systems and ball barriers so players can show up and play, not haul gear.",
   },
   {
-    priority: "P3",
+    priority: "Pilot",
     title: "Solar court lighting",
-    detail: "Pilot directional LEDs with a curfew — more evening play, less grid trenching.",
+    detail:
+      "Directional LEDs with a neighbourhood curfew — more evening play without a new building.",
   },
 ] as const;
 
 export const asks = [
-  "Permanent pickleball designation at Jericho with fixed nets",
+  "Permanent pickleball designation at Jericho, with fixed nets",
   "Full resurfacing of all four court slabs",
-  "Preserve tennis access on remaining courts",
-  "Solar LED lighting pilot with neighbour consultation",
-  "Public Sport Court Strategy timeline with Jericho in tranche 1",
+  "Preserve tennis access on the remaining courts",
+  "A solar LED lighting pilot, with neighbour consultation",
+  "A public Sport Court Strategy timeline, with Jericho in the first round of upgrades",
 ] as const;
 
 export const links = [

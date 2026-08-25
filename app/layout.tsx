@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
+import { ConvexClientProvider } from "@/components/convex-client-provider";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Jericho Courts Advocacy | Permanent courts for Vancouver",
+  title: {
+    default: "Jericho Courts | Permanent courts for Vancouver",
+    template: "%s | Jericho Courts",
+  },
   description:
-    "Campaign for permanent, paved Jericho Beach courts with fixed nets and solar lighting. Park Board advocacy for Vancouver.",
+    "A community campaign for permanent courts at Jericho Beach Park: resurfacing, fixed nets, and a solar lighting pilot.",
   openGraph: {
-    title: "Jericho Courts Advocacy",
+    title: "Jericho Courts",
     description:
-      "Jericho proves demand every day. Match it with permanent courts, proper surfaces, and responsible solar lighting.",
+      "Jericho is full every day. It is time for permanent courts, proper surfaces, and responsible solar lighting.",
     type: "website",
+    siteName: "Jericho Courts",
   },
 };
 
@@ -22,9 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen antialiased">
-        <SiteHeader />
-        <main>{children}</main>
-        <SiteFooter />
+        <ConvexClientProvider>
+          <SiteHeader />
+          <main>{children}</main>
+          <SiteFooter />
+        </ConvexClientProvider>
       </body>
     </html>
   );

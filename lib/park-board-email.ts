@@ -4,9 +4,9 @@ export const EMAIL_SUBJECT = "Fund permanent Jericho Beach courts";
 
 export const EMAIL_BODY = `Dear Commissioners,
 
-I support permanent, high-quality court infrastructure at Jericho Beach Park: resurfacing, fixed nets, preserved tennis access, a solar lighting pilot, and a public Sport Court Strategy timeline with Jericho in tranche 1.
+I support permanent, high-quality courts at Jericho Beach Park: resurfacing, fixed nets, preserved tennis access, a solar lighting pilot, and a public Sport Court Strategy timeline with Jericho in the first round of upgrades.
 
-Jericho is one of the city's busiest court sites yet still runs on temporary pop-up infrastructure. Please fund permanent upgrades in the next capital cycle.
+Jericho is one of the city's busiest court sites, yet it still runs on temporary pop-up infrastructure. Please fund permanent upgrades in the next capital cycle.
 
 Sincerely,
 [Your name]

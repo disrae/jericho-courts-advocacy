@@ -17,13 +17,16 @@ export default function HomePage() {
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
             Jericho is one of Vancouver&apos;s busiest outdoor court sites — full
-            every day on temporary pop-up infrastructure. We&apos;re organizing for
-            Park Board to fund permanent upgrades: resurfacing, fixed nets, and a
-            solar lighting pilot.
+            every day, still running on pop-up courts that were never meant to last.
+            We are asking the Park Board to fund permanent upgrades: resurfacing,
+            fixed nets, and a solar lighting pilot.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/action" className="btn-primary">
               Take action
+            </Link>
+            <Link href="/play" className="btn-secondary">
+              Check in
             </Link>
             <Link href="/facts" className="btn-secondary">
               See the facts
@@ -35,22 +38,22 @@ export default function HomePage() {
       <section className="mx-auto max-w-5xl px-6 py-16">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
-            label="Pickleball courts (pop-up)"
+            label="Pop-up pickleball courts"
             value={String(data.courts.pickleball_popup.count)}
-            note="On 2 converted tennis courts — portable nets"
+            note="On two converted tennis courts, with portable nets"
           />
           <StatCard
             label="Tennis courts"
             value={String(data.courts.tennis.count)}
-            note="Hard/asphalt-class surface"
+            note="Hard court, aging asphalt"
           />
           <StatCard
             label="Court lighting"
             value="0"
-            note="No evening play infrastructure today"
+            note="No lights. Play ends at dusk."
           />
           <StatCard
-            label="City PB courts"
+            label="City pickleball courts"
             value={`~${data.city_context.outdoor_pickleball_courts_approx}`}
             note={`For ~${Math.round(data.city_context.population_approx / 1000)}k residents`}
           />
@@ -62,7 +65,7 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="The goal"
             title="What we're asking the Park Board to deliver"
-            description="Aligned with the Vancouver Pickleball Association's push for Jericho permanence by spring 2026 — with a west-side flagship vision."
+            description="The same outcomes the Vancouver Pickleball Association is calling for by spring 2026."
           />
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             {goals.map((goal) => (
@@ -87,7 +90,7 @@ export default function HomePage() {
         <SectionHeading
           eyebrow="The ask"
           title="Five concrete requests"
-          description="Use these in letters, deputations, and commissioner meetings."
+          description="Copy these into a letter, a three-minute speaking slot, or a meeting with a commissioner."
         />
         <ol className="mt-8 space-y-4">
           {asks.map((ask, index) => (
@@ -107,17 +110,17 @@ export default function HomePage() {
       <section className="bg-emerald-900 text-white">
         <div className="mx-auto max-w-5xl px-6 py-16">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-200">
-            One line
+            Why now
           </p>
           <p className="mt-4 max-w-3xl text-2xl font-medium leading-snug sm:text-3xl">
-            Jericho proves demand every day — it&apos;s time to match that with
+            Jericho proves the demand every day. It is time to match it with
             permanent courts, proper surfaces, and responsible solar lighting.
           </p>
           <Link
             href="/action"
             className="mt-8 inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50"
           >
-            Email template & talking points
+            Email the Park Board
           </Link>
         </div>
       </section>

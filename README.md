@@ -32,13 +32,28 @@ npm run dev    # http://localhost:3000
 npm run build
 ```
 
-Pages: home, `/facts`, `/action`
+Pages: home, `/facts`, `/play` (court check-in), `/action`
+
+### Backend (Convex)
+
+Court check-ins use Convex (no accounts — browser UUID + nickname).
+
+```bash
+npm run dev          # Next + convex together
+# or
+npx convex dev       # backend only
+npm run dev:frontend # Next only
+```
+
+Dashboard: https://dashboard.convex.dev/t/daniel-israel/jericho-courts-advocacy
 
 Deploy to Vercel:
 
 ```bash
 npx vercel deploy --prod
 ```
+
+Set `NEXT_PUBLIC_CONVEX_URL` in Vercel (from `.env.local` / Convex dashboard).
 
 ## Repo layout
 

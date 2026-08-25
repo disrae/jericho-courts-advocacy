@@ -26,8 +26,8 @@ export function EmailParkBoard() {
     <article id="email" className="rounded-2xl border border-slate-200 bg-white p-6">
       <h3 className="text-lg font-semibold text-slate-900">1. Email the Park Board</h3>
       <p className="mt-3 leading-relaxed text-slate-600">
-        Opens your mail app with <strong>{PARK_BOARD_EMAIL}</strong>, subject, and letter
-        pre-filled. Add your name and address, then send.
+        Opens your mail app with <strong>{PARK_BOARD_EMAIL}</strong>, subject, and a
+        letter already filled in. Add your name and address, then send.
       </p>
 
       <div className="mt-4 flex flex-wrap gap-3">
@@ -44,7 +44,8 @@ export function EmailParkBoard() {
       </div>
 
       <p className="mt-3 text-xs text-slate-500">
-        Mail app didn&apos;t pre-fill? Hit copy, then paste into the body yourself.
+        If the letter didn&apos;t fill in automatically, copy it and paste it into the
+        email body.
       </p>
 
       <details className="mt-4 rounded-xl bg-slate-50 p-4">

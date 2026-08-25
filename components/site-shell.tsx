@@ -4,6 +4,7 @@ import { buildMailtoUrl } from "@/lib/park-board-email";
 const nav = [
   { href: "/", label: "Home" },
   { href: "/facts", label: "Facts" },
+  { href: "/play", label: "Check in" },
   { href: "/action", label: "Take action" },
 ] as const;
 
@@ -42,12 +43,26 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-slate-200 bg-slate-50">
       <div className="mx-auto max-w-5xl px-6 py-10 text-sm text-slate-600">
-        <p className="font-medium text-slate-900">Jericho Courts Advocacy</p>
-        <p className="mt-2 max-w-2xl leading-relaxed">
-          Community campaign for permanent, quality courts at Jericho Beach Park.
-          Built to coordinate research, data, and Park Board engagement.
-        </p>
-        <p className="mt-4 text-xs text-slate-500">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="font-medium text-slate-900">Jericho Courts</p>
+            <p className="mt-2 max-w-md leading-relaxed">
+              A community campaign for permanent, quality courts at Jericho Beach Park.
+            </p>
+          </div>
+          <nav className="flex flex-col gap-2 sm:text-right">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="transition hover:text-emerald-800"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+        <p className="mt-8 text-xs text-slate-500">
           Not affiliated with the City of Vancouver or Vancouver Park Board.
         </p>
       </div>
