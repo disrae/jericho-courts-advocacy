@@ -13,7 +13,7 @@ export default function HomePage() {
             Jericho Beach Park
           </p>
           <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
-            Permanent courts. Proper surfaces. Lights when it matters.
+            Permanent courts. Proper surfaces. Lights after dark.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
             Jericho is one of Vancouver&apos;s busiest outdoor court sites — full
@@ -113,8 +113,8 @@ export default function HomePage() {
             Why now
           </p>
           <p className="mt-4 max-w-3xl text-2xl font-medium leading-snug sm:text-3xl">
-            Jericho proves the demand every day. It is time to match it with
-            permanent courts, proper surfaces, and responsible solar lighting.
+            Jericho proves the demand every day. Match it with permanent courts,
+            proper surfaces, and solar lighting.
           </p>
           <Link
             href="/action"

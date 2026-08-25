@@ -70,7 +70,7 @@ export default function PosterPage() {
         </div>
 
         <footer className="poster-foot">
-          Permanent courts · Proper surfaces · Lights when it matters
+          Permanent courts · Proper surfaces · Lights after dark
         </footer>
       </article>
     </div>

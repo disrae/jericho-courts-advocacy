@@ -1,7 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ConvexClientProvider } from "@/components/convex-client-provider";
 import { SiteFooter, SiteHeader } from "@/components/site-shell";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Jericho Courts",
     description:
-      "Jericho is full every day. It is time for permanent courts, proper surfaces, and responsible solar lighting.",
+      "Jericho is full every day. It is time for permanent courts, proper surfaces, and solar lighting.",
     type: "website",
     siteName: "Jericho Courts",
   },
