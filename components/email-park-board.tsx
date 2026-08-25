@@ -8,7 +8,15 @@ import {
   buildMailtoUrl,
 } from "@/lib/park-board-email";
 
-export function EmailParkBoard() {
+export function EmailParkBoard({
+  title = "1. Email the Park Board",
+  description = `Opens your mail app with ${PARK_BOARD_EMAIL}, subject, and a letter already filled in. Add your name and address, then send.`,
+  showMailButton = true,
+}: {
+  title?: string;
+  description?: string;
+  showMailButton?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
   const mailto = buildMailtoUrl();
 
@@ -23,21 +31,20 @@ export function EmailParkBoard() {
   }
 
   return (
-    <article id="email" className="rounded-2xl border border-slate-200 bg-white p-6">
-      <h3 className="text-lg font-semibold text-slate-900">1. Email the Park Board</h3>
-      <p className="mt-3 leading-relaxed text-slate-600">
-        Opens your mail app with <strong>{PARK_BOARD_EMAIL}</strong>, subject, and a
-        letter already filled in. Add your name and address, then send.
-      </p>
+    <article className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6">
+      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+      <p className="mt-3 leading-relaxed text-slate-600">{description}</p>
 
-      <div className="mt-4 flex flex-wrap gap-3">
-        <a href={mailto} className="btn-primary">
-          Open in mail app
-        </a>
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        {showMailButton ? (
+          <a href={mailto} className="btn-primary min-h-12 w-full sm:w-auto">
+            Open in mail app
+          </a>
+        ) : null}
         <button
           type="button"
           onClick={() => void copyTemplate()}
-          className="btn-secondary"
+          className="btn-secondary min-h-12 w-full sm:w-auto"
         >
           {copied ? "Copied!" : "Copy letter text"}
         </button>

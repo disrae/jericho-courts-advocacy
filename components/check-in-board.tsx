@@ -63,9 +63,14 @@ export function CheckInBoard() {
     }
   }
 
+  const showEmailNudge =
+    status != null &&
+    (status.startsWith("You're on the board") ||
+      status.startsWith("You're already checked in"));
+
   return (
-    <div className="space-y-10">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="flex flex-col gap-6 sm:gap-10">
+      <div className="order-2 grid grid-cols-2 gap-3 lg:order-1 lg:grid-cols-4 lg:gap-4">
         <StatCard
           label="Check-ins today"
           value={stats ? String(stats.checkInsToday) : "—"}
@@ -84,10 +89,10 @@ export function CheckInBoard() {
         />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="order-1 grid gap-4 lg:order-2 lg:grid-cols-2 lg:gap-6">
         <form
           onSubmit={onCheckIn}
-          className="rounded-2xl border border-emerald-900/10 bg-white p-6 shadow-sm"
+          className="rounded-2xl border border-emerald-900/10 bg-white p-4 shadow-sm sm:p-6"
         >
           <h3 className="text-lg font-semibold text-slate-900">
             {player ? `Welcome back, ${player.name}` : "Check in at Jericho"}
@@ -103,19 +108,31 @@ export function CheckInBoard() {
               onChange={(e) => setNameInput(e.target.value)}
               maxLength={40}
               required
+              autoComplete="given-name"
+              enterKeyHint="done"
               placeholder="e.g. Alex"
-              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none ring-emerald-700/30 focus:ring-2"
+              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-900 outline-none ring-emerald-700/30 focus:ring-2"
             />
           </label>
           <button
             type="submit"
             disabled={busy || nameInput.trim().length < 1}
-            className="btn-primary mt-5 w-full disabled:opacity-60"
+            className="btn-primary mt-5 min-h-12 w-full disabled:opacity-60"
           >
             {busy ? "Checking in…" : "I'm playing"}
           </button>
           {status ? (
-            <p className="mt-4 text-sm leading-relaxed text-emerald-900">{status}</p>
+            <p className="mt-4 text-sm leading-relaxed text-emerald-900">
+              {status}
+              {showEmailNudge ? (
+                <>
+                  {" "}
+                  <a href="#email" className="font-semibold underline underline-offset-2">
+                    Email the Park Board →
+                  </a>
+                </>
+              ) : null}
+            </p>
           ) : null}
           <p className="mt-4 text-xs leading-relaxed text-slate-500">
             One check-in every 45 minutes per device. Names show publicly on this
@@ -123,7 +140,7 @@ export function CheckInBoard() {
           </p>
         </form>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6">
           <h3 className="text-lg font-semibold text-slate-900">Here now</h3>
           <p className="mt-2 text-sm text-slate-600">
             Checked in within the last 3 hours.
@@ -141,7 +158,9 @@ export function CheckInBoard() {
                   key={`${row.name}-${row.checkedInAt}`}
                   className="flex items-baseline justify-between gap-3 py-3"
                 >
-                  <span className="font-medium text-slate-900">{row.name}</span>
+                  <span className="min-w-0 truncate font-medium text-slate-900">
+                    {row.name}
+                  </span>
                   <span className="shrink-0 text-xs text-slate-500">
                     {formatRelative(row.checkedInAt, now)}
                   </span>

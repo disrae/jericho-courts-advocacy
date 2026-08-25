@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   },
   description:
     "A community campaign for permanent courts at Jericho Beach Park: resurfacing, fixed nets, and a solar lighting pilot.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+  },
   openGraph: {
     title: "Jericho Courts",
     description:

@@ -37,7 +37,9 @@ export default function ActionPage() {
       />
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        <EmailParkBoard />
+        <div id="email" className="contents">
+          <EmailParkBoard />
+        </div>
 
         <article className="rounded-2xl border border-slate-200 bg-white p-6">
           <h3 className="text-lg font-semibold text-slate-900">2. Speak at a meeting</h3>
