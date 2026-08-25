@@ -11,3 +11,4 @@ data/raw/*.html
 data/photos/
 *.log
 .vercel
+tsconfig.tsbuildinfo
