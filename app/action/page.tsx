@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { EmailParkBoard } from "@/components/email-park-board";
 import { SectionHeading } from "@/components/site-shell";
 
 export const metadata: Metadata = {
   title: "Take action",
   description:
-    "Email the Park Board, speak at a meeting, or join the Vancouver Pickleball Association's campaign for permanent Jericho courts.",
+    "Email the Park Board, speak at a meeting, join the VPA campaign, or prep for the Park Board election.",
 };
 
 const pushback = [
@@ -77,6 +78,17 @@ export default function ActionPage() {
           >
             VPA MORE campaign
           </a>
+        </article>
+
+        <article className="rounded-2xl border border-emerald-900/15 bg-emerald-50/50 p-6 lg:col-span-2">
+          <h3 className="text-lg font-semibold text-slate-900">4. Vote Park Board — Oct 17</h3>
+          <p className="mt-3 leading-relaxed text-slate-600">
+            Commissioners decide parks capital. See who&apos;s running and what to ask
+            about Jericho before election day.
+          </p>
+          <Link href="/election" className="mt-4 btn-secondary px-4 py-2">
+            2026 election guide
+          </Link>
         </article>
       </div>
 

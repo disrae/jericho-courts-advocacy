@@ -3,6 +3,7 @@
 | File | Description |
 |------|-------------|
 | `jericho-courts-baseline.json` | Curated facts about Jericho courts |
+| `park-board-election-2026.json` | Curated Park Board slate notes for Oct 2026 (Jericho lens) |
 | `park-board-meetings.json` | Scraped meeting/agenda links matching keywords |
 | `raw/` | Raw HTML dumps from scrapers |
 | `outreach-log.csv` | Human outreach tracking (create when needed) |

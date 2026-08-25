@@ -1,0 +1,159 @@
+{
+  "electionDate": "2026-10-17",
+  "seats": 7,
+  "lastUpdated": "2026-08-24",
+  "disclaimer": "Curated for Jericho courts advocacy — not an endorsement guide. Platforms change; verify on candidate and party sites before voting. Nomination papers finalize closer to election day.",
+  "whyItMatters": [
+    "Park Board commissioners approve parks capital and recreation projects — including court upgrades.",
+    "Council sets the overall budget envelope; Park Board decides what gets built inside it.",
+    "Jericho has run as a pop-up since 2023. The next board will decide whether permanence lands in the next capital cycle."
+  ],
+  "voterAsks": [
+    "Will you fund permanent pickleball courts at Jericho (resurfacing + fixed nets) in the next capital plan?",
+    "Will you keep tennis access on the remaining Jericho courts?",
+    "Will you support a solar LED lighting pilot with neighbour consultation and a hard curfew?",
+    "Will you publish a Sport Court Strategy timeline with Jericho in the first upgrade round?"
+  ],
+  "parties": [
+    {
+      "id": "abc",
+      "name": "ABC Vancouver",
+      "shortName": "ABC",
+      "recreationNote": "Dropped its push to dissolve Park Board; now running commissioners on affordable recreation, community centres, and pool access. Strong on facilities volume — still unclear on outdoor court sports / Jericho specifically.",
+      "jerichoRelevance": "ask",
+      "sourceLabel": "ABC Park Board position (Jul 2026)",
+      "sourceUrl": "https://abcvancouver.ca/2026/07/abc-vancouver-announces-position-on-vancouver-park-board/",
+      "candidates": [
+        { "name": "Angela Haer", "note": "Declared Park Board candidate" },
+        { "name": "Marie-Claire Howard", "note": "Declared Park Board candidate" },
+        { "name": "Jaspreet Virdi", "note": "Declared Park Board candidate" }
+      ]
+    },
+    {
+      "id": "cope",
+      "name": "COPE",
+      "shortName": "COPE",
+      "recreationNote": "Frames parks as essential public infrastructure — upgrades, pools, playgrounds, climate resilience. Equity and green-space focus; no published Jericho-specific pledge yet.",
+      "jerichoRelevance": "ask",
+      "sourceLabel": "COPE Park Board nomination (Aug 2026)",
+      "sourceUrl": "https://www.votecope.ca/news/cope-announces-tamiko-suzuki-as-fourth-park-board-candidate-for-2026-election",
+      "candidates": [
+        { "name": "Sacia Burton", "note": "BC Poverty Reduction Coalition" },
+        { "name": "Jamie Han", "note": "Youth organizer; active transportation" },
+        { "name": "Cease Wyss", "note": "Squamish Nation matriarch; ethnobotanist" },
+        { "name": "Tamiko Suzuki", "note": "Nominated Aug 2026; parks upgrades + canopy" }
+      ]
+    },
+    {
+      "id": "green",
+      "name": "Green Party of Vancouver",
+      "shortName": "Green",
+      "recreationNote": "Incumbent chair Tom Digby seeking re-election. Slate stresses parks, recreation services, accessibility, and public accountability. Best placed to answer on current Sport Court Strategy delays.",
+      "jerichoRelevance": "priority-ask",
+      "sourceLabel": "Vancouver Greens Park Board slate",
+      "sourceUrl": "https://www.vangreens.ca/vancouver_greens_nominate_park_board_and_school_board_candidates_for_2026_election",
+      "candidates": [
+        {
+          "name": "Tom Digby",
+          "note": "Incumbent chair (2022–present) — ask about Jericho capital timeline",
+          "incumbent": true
+        },
+        {
+          "name": "Gabi Tremblay",
+          "note": "Former Park Board lifeguard; outreach worker (Greens nomination)"
+        },
+        { "name": "Spencer Van Vloten", "note": "Accessibility advocate" }
+      ]
+    },
+    {
+      "id": "onecity",
+      "name": "OneCity Vancouver",
+      "shortName": "OneCity",
+      "recreationNote": "Includes former commissioner John Irwin. Public-space and services language on VoteMate; worth pressing on outdoor court investment vs. community-centre focus.",
+      "jerichoRelevance": "priority-ask",
+      "sourceLabel": "OneCity candidates (Georgia Straight)",
+      "sourceUrl": "https://www.straight.com/city-culture/onecity-vancouver-announces-council-school-board-and-park-board-candidates",
+      "candidates": [
+        {
+          "name": "John Irwin",
+          "note": "Former Park Board commissioner (2018–2022)",
+          "incumbent": false
+        },
+        { "name": "Dominic Denofrio", "note": "Declared Park Board candidate" },
+        {
+          "name": "Tyler Petersen",
+          "note": "Biologist; VoteMate issues include public spaces & services"
+        }
+      ]
+    },
+    {
+      "id": "liberals",
+      "name": "Vancouver Liberals",
+      "shortName": "Liberals",
+      "recreationNote": "Two sitting commissioners seeking re-election (Bastyovanszky, Jensen). Direct accountability for the pop-up years — ask what they will put in the next capital plan for Jericho.",
+      "jerichoRelevance": "priority-ask",
+      "sourceLabel": "VoteMate Park Board list",
+      "sourceUrl": "https://votemate.org/bc2026/candidates/?race=172&riding=794",
+      "candidates": [
+        {
+          "name": "Brennan Bastyovanszky",
+          "note": "Incumbent commissioner (2022–present)",
+          "incumbent": true
+        },
+        {
+          "name": "Scott Jensen",
+          "note": "Incumbent commissioner (2022–present)",
+          "incumbent": true
+        },
+        { "name": "Shayla Bird", "note": "Declared Park Board candidate" },
+        { "name": "Mark Halyk", "note": "Declared Park Board candidate" },
+        { "name": "Amanda Bains", "note": "Declared Park Board candidate" }
+      ]
+    },
+    {
+      "id": "vote-vancouver",
+      "name": "Vote Vancouver",
+      "shortName": "Vote Vancouver",
+      "recreationNote": "Newer civic slate. Limited published Park Board recreation detail so far — treat as open questions on court capital.",
+      "jerichoRelevance": "ask",
+      "sourceLabel": "Vote Vancouver candidates (Daily Hive)",
+      "sourceUrl": "https://dailyhive.com/vancouver/vote-vancouver-party-first-candidates-civic-election-2026",
+      "candidates": [
+        { "name": "Summit Ambeault-Wannamaker", "note": "Wildland firefighter" },
+        { "name": "Amee Barber", "note": "Regulated industries policy advocate" },
+        { "name": "Stephen Menon", "note": "Product development; Qmunity board" }
+      ]
+    },
+    {
+      "id": "team",
+      "name": "TEAM for a Livable Vancouver",
+      "shortName": "TEAM",
+      "recreationNote": "Smaller Park Board slate on VoteMate. Confirm recreation and capital priorities directly.",
+      "jerichoRelevance": "ask",
+      "sourceLabel": "VoteMate Park Board list",
+      "sourceUrl": "https://votemate.org/bc2026/candidates/?race=172&riding=794",
+      "candidates": [
+        { "name": "Wah Gee", "note": "Declared Park Board candidate" },
+        { "name": "Alex Tkach", "note": "Declared Park Board candidate" }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "label": "VoteMate — Vancouver Park Board candidates",
+      "href": "https://votemate.org/bc2026/candidates/?race=172&riding=794"
+    },
+    {
+      "label": "2026 Vancouver municipal election (Wikipedia)",
+      "href": "https://en.wikipedia.org/wiki/2026_Vancouver_municipal_election"
+    },
+    {
+      "label": "ABC position on Park Board",
+      "href": "https://abcvancouver.ca/2026/07/abc-vancouver-announces-position-on-vancouver-park-board/"
+    },
+    {
+      "label": "City of Vancouver — elections",
+      "href": "https://vancouver.ca/your-government/civic-elections.aspx"
+    }
+  ]
+}
