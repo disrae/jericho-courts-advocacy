@@ -84,7 +84,7 @@ kbd { font: 500 11px var(--mono); border: 1px solid var(--line); border-radius: 
 #dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.3); }
 #dots i.on { background: var(--court); }
 body.present #panel { display: none; }
-body.clean #panel, body.clean #deck, body.clean #story { display: none !important; }
+body.clean #panel, body.clean #deck, body.clean #story, body.clean #stat { display: none !important; }
 #toggle { display: none; }
 @media (max-width: 760px) {
   #app { flex-direction: column-reverse; }
@@ -663,6 +663,7 @@ window.__present = (i) => { present(true); showStep(i); move = null; const v = V
 const tmp = new THREE.Vector3();
 const clock = new THREE.Clock();
 function frame() {
+  if (window.__api?.paused) { requestAnimationFrame(frame); return; }
   const dt = Math.min(.05, clock.getDelta());
   if (move) {
     move.t = Math.min(1, move.t + dt / 1.6); const e = ease(move.t);
@@ -680,6 +681,11 @@ function frame() {
   }
   requestAnimationFrame(frame);
 }
+// hooks for rendering stills and video frame by frame from a script
+window.__api = { paused: false, persp, controls, state, apply, setMode, setView, canvas: renderer.domElement, VIEWS,
+  setReveal(r) { reveal = r; if (r >= 1) { topMat.opacity = sideMat.opacity = 1; nets.scale.y = dividers.scale.y = 1; apply(); } else stepReveal(0); },
+  cam(pos, target, fov) { camera = persp; persp.position.set(...pos); controls.target.set(...target); persp.lookAt(...target); if (fov) persp.fov = fov; persp.updateProjectionMatrix(); },
+  render() { renderer.render(scene, camera); } };
 apply();
 const start = location.hash.slice(1);
 setView(start in VIEWS || start === 'plan' ? start : 'aerial', false);
