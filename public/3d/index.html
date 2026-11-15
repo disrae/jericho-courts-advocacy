@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="The real Jericho Beach Park south court pad, measured from an aerial photo and redrawn with 8 regulation pickleball courts, new surface, nets and fences.">
+<meta property="og:title" content="Jericho pickleball courts, to scale">
+<meta property="og:description" content="8 regulation courts drawn at true size on the real pad at Jericho Beach Park.">
+<title>Jericho Courts To Scale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: full-bleed 3D view with a slim drawing-office panel docked left (bottom sheet on phones); Present mode drops the panel for captions and a clicker-driven story. */
+:root {
+  --bg: #e9ede6; --panel: #f7f8f4; --ink: #1d2620; --muted: #5b6a5f; --line: #cdd6cc;
+  --accent: #2c5b9a; --accent-ink: #ffffff; --chip: #e2e8df; --label-bg: rgba(255,255,255,.92); --label-ink: #1d2620;
+  --cap-bg: rgba(14,22,18,.78); --cap-ink: #f3f6f1; --cap-muted: #b9c7bd; --court: #4f86c4;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121814; --panel: #19211c; --ink: #e4ebe5; --muted: #98a89c; --line: #2d3a31;
+  --accent: #6f9fdb; --accent-ink: #0c1522; --chip: #222c25; --label-bg: rgba(20,27,22,.9); --label-ink: #e4ebe5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #121814; --panel: #19211c; --ink: #e4ebe5; --muted: #98a89c; --line: #2d3a31;
+  --accent: #6f9fdb; --accent-ink: #0c1522; --chip: #222c25; --label-bg: rgba(20,27,22,.9); --label-ink: #e4ebe5; color-scheme: dark }
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; }
+#app { position: relative; height: 100%; display: flex; background: var(--bg); }
+#panel { width: 310px; flex: none; background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto;
+  padding-block: 18px 24px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: 18px; display: flex; flex-direction: column; gap: 18px; }
+#stage { position: relative; flex: 1; min-width: 0; }
+canvas { display: block; width: 100%; height: 100%; }
+h1 { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.15; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); font-size: 13px; line-height: 1.45; margin: 4px 0 0; }
+.grp { display: flex; flex-direction: column; gap: 8px; }
+.grp > span { font-family: var(--display); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: 500 13px var(--body); color: var(--ink); background: var(--chip); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button:focus-visible, label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.big { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.big button { border: 0; border-radius: 0; padding: 11px 8px; font: 600 15px var(--display); }
+.cta { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.sw { width: 30px; height: 30px; padding: 0; position: relative; overflow: hidden; }
+.sw i { position: absolute; inset: 7px; border-radius: 2px; }
+label.chk { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
+label.chk input { accent-color: var(--accent); width: 16px; height: 16px; }
+dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 5px 10px; font-size: 13px; }
+dt { color: var(--muted); } dd { margin: 0; font-family: var(--mono); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.note { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 0; }
+.warn { color: var(--ink); background: var(--chip); border-left: 3px solid #c98a2b; padding: 8px 10px; border-radius: 0 6px 6px 0; }
+kbd { font: 500 11px var(--mono); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
+#labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.dim { position: absolute; transform: translate(-50%, -50%); font: 500 11px var(--mono); background: var(--label-bg); color: var(--label-ink);
+  padding: 2px 5px; border-radius: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+#legend { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); bottom: 12px; display: flex; gap: 12px; align-items: flex-end;
+  font: 500 11px var(--mono); color: var(--label-ink); background: var(--label-bg); padding: 8px 10px; border-radius: 6px; }
+#north { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+#north svg { width: 18px; height: 26px; }
+#scalebar div { height: 6px; border: 1.5px solid var(--label-ink); border-top: 0; margin-top: 3px; }
+#credit { position: absolute; left: 10px; bottom: 8px; font: 400 10px var(--body); color: #fff; text-shadow: 0 1px 2px #000a; }
+#loading { position: absolute; inset: 0; display: grid; place-items: center; font: 500 14px var(--body); color: var(--muted); }
+#stat { position: absolute; top: 14px; right: max(14px, env(safe-area-inset-right, 0px)); background: var(--cap-bg); color: var(--cap-ink); border-radius: 8px;
+  padding: 10px 14px; display: flex; gap: 10px; align-items: baseline; font-family: var(--display); pointer-events: none; }
+#stat b { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+#stat span { font-size: 13px; color: var(--cap-muted); line-height: 1.25; }
+/* present mode */
+#story { position: absolute; left: max(28px, env(safe-area-inset-left, 0px)); top: 26px; max-width: min(560px, calc(100% - 56px)); background: var(--cap-bg); color: var(--cap-ink);
+  border-radius: 10px; padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 6px; }
+#story small { font: 500 12px var(--mono); color: var(--cap-muted); letter-spacing: .04em; }
+#story h2 { margin: 0; font: 800 clamp(24px, 3.2vw, 40px)/1.08 var(--display); text-wrap: balance; }
+#story p { margin: 0; font-size: clamp(15px, 1.4vw, 19px); line-height: 1.4; color: var(--cap-muted); }
+#story h2, #story p { transition: opacity .35s; }
+#deck { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: flex; gap: 10px; align-items: center;
+  background: var(--cap-bg); border-radius: 999px; padding: 6px 8px; }
+#deck button { background: transparent; color: var(--cap-ink); border: 0; font: 600 14px var(--display); padding: 8px 14px; border-radius: 999px; }
+#deck button:hover { background: rgba(255,255,255,.12); }
+#dots { display: flex; gap: 7px; }
+#dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.3); }
+#dots i.on { background: var(--court); }
+body.present #panel { display: none; }
+body.clean #panel, body.clean #deck, body.clean #story { display: none !important; }
+#toggle { display: none; }
+@media (max-width: 760px) {
+  #app { flex-direction: column-reverse; }
+  #panel { width: auto; max-height: 48%; border-right: 0; border-top: 1px solid var(--line); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+  #panel.min > :not(.head) { display: none; }
+  #toggle { display: inline-block; }
+  .head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  #stat b { font-size: 22px; }
+  #story { left: 12px; top: 12px; max-width: calc(100% - 24px); padding: 12px 14px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="panel">
+    <div class="head">
+      <div>
+        <h1>Jericho pickleball courts, to scale</h1>
+        <p class="sub">The real south court pad at Jericho Beach Park, measured from an aerial photo and redrawn with 8 regulation courts.</p>
+      </div>
+      <div class="seg"><button id="toggle" aria-pressed="false">Hide</button></div>
+    </div>
+
+    <div class="grp">
+      <div class="big" id="mode">
+        <button data-m="today">Today</button>
+        <button data-m="proposed" aria-pressed="true">Proposed</button>
+      </div>
+      <div class="row2">
+        <button class="cta" id="present">Present</button>
+        <button id="save">Save image</button>
+      </div>
+    </div>
+
+    <div class="grp"><span>View</span>
+      <div class="seg" id="views">
+        <button data-v="aerial" aria-pressed="true">Aerial</button>
+        <button data-v="aerial-west">From west</button>
+        <button data-v="plan">Plan</button>
+        <button data-v="court">Courtside</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="spin"> Slowly circle the courts</label>
+    </div>
+
+    <div class="grp"><span>Fence between north and south courts</span>
+      <div class="seg" id="dividers">
+        <button data-d="none">None</button>
+        <button data-d="low">Low, 4 ft</button>
+        <button data-d="full" aria-pressed="true">Full, 10 ft</button>
+      </div>
+      <p class="note">One fence between the two rows of baselines. There isn't room for fences between side-by-side courts.</p>
+    </div>
+
+    <div class="grp"><span>Show</span>
+      <label class="chk"><input type="checkbox" id="players" checked> Players, to scale</label>
+      <label class="chk"><input type="checkbox" id="lights"> Light poles</label>
+      <label class="chk"><input type="checkbox" id="dusk"> Dusk</label>
+    </div>
+
+    <div class="grp"><span>Court colours</span>
+      <div class="seg" id="colours"></div>
+    </div>
+
+    <div class="grp"><span>Measurements</span>
+      <dl>
+        <dt>Pad, fence to fence</dt><dd>33.6 × 36.9 m</dd>
+        <dt>Court, outside lines</dt><dd>6.10 × 13.41 m</dd>
+        <dt></dt><dd>20 × 44 ft</dd>
+        <dt>Kitchen depth</dt><dd>2.13 m · 7 ft</dd>
+        <dt>Space per court</dt><dd>8.40 × 18.43 m</dd>
+        <dt>Between sidelines</dt><dd>2.30 m · 7.5 ft</dd>
+        <dt>Behind baselines</dt><dd>2.51 m · 8.2 ft</dd>
+        <dt>Net height</dt><dd>36 in · 34 in mid</dd>
+        <dt>Players at once</dt><dd>8 today · 32</dd>
+      </dl>
+      <p class="note warn">USA Pickleball suggests 30 × 60 ft (9.14 × 18.29 m) per court. This pad gives each of 8 courts 27.6 × 60.5 ft, so the length fits and the sides are 2.5 ft tight.</p>
+      <p class="note">Pad measured from a 10 cm aerial photo and checked against the existing tennis lines (23.77 × 10.97 m, read as 23.8 × 11.0 m). Good to about ±0.3 m. A concept sketch, not a construction drawing.</p>
+      <p class="note">In Present mode: <kbd>→</kbd> or a slide clicker moves on, <kbd>←</kbd> goes back, <kbd>Esc</kbd> exits.</p>
+    </div>
+  </aside>
+  <main id="stage">
+    <div id="loading">Loading the aerial photo…</div>
+    <div id="labels"></div>
+    <div id="stat" aria-live="polite"><b id="statN">32</b><span id="statT">players at once<br>on 8 courts</span></div>
+    <div id="legend" hidden>
+      <div id="north"><svg viewBox="0 0 18 26" aria-hidden="true"><path d="M9 1 L16 22 L9 17 L2 22 Z" fill="currentColor"/></svg>N</div>
+      <div id="scalebar"><span>10 m</span><div></div></div>
+    </div>
+    <div id="story" hidden><small id="storyN"></small><h2 id="storyH"></h2><p id="storyP"></p></div>
+    <div id="deck" hidden>
+      <button id="prev" aria-label="Previous">‹ Back</button>
+      <div id="dots"></div>
+      <button id="next" aria-label="Next">Next ›</button>
+      <button id="exit">Exit</button>
+    </div>
+    <div id="credit">Aerial: Esri, Maxar, Earthstar Geographics</div>
+  </main>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ---------- real measurements (metres) ----------
+const FT = 0.3048, IN = 0.0254;
+const PAD_W = 33.6, PAD_L = 36.85;            // south pad, measured from the aerial
+const ROT = 1.3 * Math.PI / 180;              // pad is turned 1.3° east of true north
+const PHOTO = { size: 200, cx: -0.7, cz: -18.85 }; // photo centre relative to pad centre (in photo axes)
+const NORTH_PAD = { w: 33.1, l: 36.9, cx: 0.7 }; // existing tennis pad, shares the south pad's north fence
+const TENNIS = [-8.05, 7.55];                 // today's two tennis courts on the south pad (centre x, from the photo)
+const CW = 20 * FT, CL = 44 * FT, LINE = 2 * IN, KITCHEN = 7 * FT;
+const POSTS = 22 * FT, NET_SIDE = 36 * IN, NET_MID = 34 * IN;
+const COLS = 4, ROWS = 2, BAY_W = PAD_W / COLS, BAY_L = PAD_L / ROWS;
+const FENCE_H = 10 * FT, LOW_H = 4 * FT;
+const courts = [];
+for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++)
+  courts.push({ x: -PAD_W / 2 + BAY_W * (c + .5), z: -PAD_L / 2 + BAY_L * (r + .5) });
+
+const PALETTES = [
+  { id: 'classic', name: 'Blue on green', surround: '#4b7a59', court: '#2b5a99', kitchen: '#2b5a99' },
+  { id: 'twotone', name: 'Two-tone blue', surround: '#3e6b57', court: '#2a5d9e', kitchen: '#4f86c4' },
+  { id: 'teal', name: 'Teal on sage', surround: '#6f8a57', court: '#23707f', kitchen: '#23707f' },
+  { id: 'slate', name: 'Blue on grey', surround: '#6b7470', court: '#2f5f9c', kitchen: '#2f5f9c' },
+];
+
+const state = { view: 'aerial', mode: 'proposed', dividers: 'full', palette: 'classic', players: true, lights: false, dusk: false, spin: false };
+
+// ---------- renderer / scene ----------
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.prepend(renderer.domElement);
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+const scene = new THREE.Scene();
+const SKY_DAY = new THREE.Color('#c9d6df'), SKY_DUSK = new THREE.Color('#27304a');
+scene.background = SKY_DAY.clone();
+scene.fog = new THREE.Fog(SKY_DAY.clone(), 140, 330);
+const hemi = new THREE.HemisphereLight('#eef3ff', '#56603f', 1.25);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight('#fff4e2', 2.1);
+sun.position.set(-18, 48, 40); // from the south, matching the photo's shadows (they fall north)
+sun.castShadow = true;
+sun.shadow.mapSize.set(4096, 4096);
+Object.assign(sun.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 1, far: 140 });
+sun.shadow.bias = -0.0004;
+scene.add(sun);
+
+// ---------- ground: the real aerial photo ----------
+const world = new THREE.Group(); world.rotation.y = ROT; scene.add(world);
+const outer = new THREE.Mesh(new THREE.PlaneGeometry(1200, 1200), new THREE.MeshBasicMaterial({ color: '#5f6e45' }));
+outer.rotation.x = -Math.PI / 2; outer.position.y = -0.05; scene.add(outer);
+const photoMat = new THREE.MeshBasicMaterial({ color: '#ffffff' });
+const photo = new THREE.Mesh(new THREE.PlaneGeometry(PHOTO.size, PHOTO.size), photoMat);
+photo.rotation.x = -Math.PI / 2; photo.position.set(PHOTO.cx, 0, PHOTO.cz);
+world.add(photo);
+const shadowCatcher = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), new THREE.ShadowMaterial({ opacity: .28 }));
+shadowCatcher.rotation.x = -Math.PI / 2; shadowCatcher.position.y = 0.01; shadowCatcher.receiveShadow = true;
+scene.add(shadowCatcher);
+new THREE.TextureLoader().load('/3d/aerial.jpg', (t) => {
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = maxAniso;
+  photoMat.map = t; photoMat.needsUpdate = true;
+  document.getElementById('loading').remove();
+  window.__ready = true;
+}, undefined, () => { document.getElementById('loading').textContent = 'The aerial photo did not load. The model still shows at true size.'; window.__ready = true; });
+
+// ---------- textures drawn in code ----------
+function chainLinkTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d');
+  g.strokeStyle = '#fff'; g.lineWidth = 3.2;
+  g.beginPath();
+  g.moveTo(0, 32); g.lineTo(32, 0); g.lineTo(64, 32); g.lineTo(32, 64); g.closePath();
+  g.stroke();
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = maxAniso;
+  return t;
+}
+function netTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 32;
+  const g = c.getContext('2d');
+  g.fillStyle = '#fff'; g.fillRect(0, 0, 32, 3); g.fillRect(0, 0, 3, 32);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = maxAniso;
+  return t;
+}
+const CHAIN = chainLinkTexture(), NETTEX = netTexture();
+const DIAMOND = 0.11; // metres per texture tile
+function fenceMaterial(w, h) {
+  const t = CHAIN.clone(); t.needsUpdate = true; t.repeat.set(w / DIAMOND, h / DIAMOND);
+  return new THREE.MeshStandardMaterial({ color: '#1e2a22', map: t, alphaMap: t, transparent: true, side: THREE.DoubleSide, depthWrite: false, roughness: .7, metalness: .3 });
+}
+const postMat = new THREE.MeshStandardMaterial({ color: '#1c241f', roughness: .55, metalness: .5 });
+
+// ---------- builders ----------
+function fence(group, x1, z1, x2, z2, h) {
+  const len = Math.hypot(x2 - x1, z2 - z1); if (len < 0.05) return;
+  const ang = Math.atan2(z2 - z1, x2 - x1);
+  const mx = (x1 + x2) / 2, mz = (z1 + z2) / 2;
+  const panel = new THREE.Mesh(new THREE.PlaneGeometry(len, h), fenceMaterial(len, h));
+  panel.position.set(mx, h / 2 + .02, mz); panel.rotation.y = -ang; panel.renderOrder = 2;
+  group.add(panel);
+  const n = Math.max(1, Math.round(len / 3));
+  for (let i = 0; i <= n; i++) {
+    const f = i / n;
+    const p = new THREE.Mesh(new THREE.CylinderGeometry(.036, .036, h + .05, 10), postMat);
+    p.position.set(x1 + (x2 - x1) * f, (h + .05) / 2, z1 + (z2 - z1) * f); p.castShadow = true;
+    group.add(p);
+  }
+  const rail = new THREE.Mesh(new THREE.CylinderGeometry(.021, .021, len, 8), postMat);
+  rail.rotation.z = Math.PI / 2; rail.rotation.y = -ang; rail.position.set(mx, h, mz); rail.castShadow = true;
+  group.add(rail);
+}
+function fenceRect(group, x0, z0, x1, z1, h, gaps = []) {
+  const sides = { n: [[x0, z0], [x1, z0]], s: [[x0, z1], [x1, z1]], w: [[x0, z0], [x0, z1]], e: [[x1, z0], [x1, z1]] };
+  for (const [k, [[ax, az], [bx, bz]]] of Object.entries(sides)) {
+    const along = ax === bx ? 'z' : 'x';
+    const a = along === 'x' ? ax : az, b = along === 'x' ? bx : bz;
+    let cuts = [[a, b]];
+    for (const g of gaps.filter((g) => g.side === k)) cuts = cuts.flatMap(([p, q]) => (g.to <= p || g.from >= q) ? [[p, q]] : [[p, g.from], [g.to, q]].filter(([u, v]) => v - u > .1));
+    for (const [p, q] of cuts) along === 'x' ? fence(group, p, az, q, az, h) : fence(group, ax, p, ax, q, h);
+  }
+}
+
+// a simple to-scale player: about 1.75 m, shirt colour varies, paddle in the right hand
+const skinTones = ['#e7c3a1', '#c99b74', '#8d5a3b', '#f1d2b6', '#a8714f'];
+const shirts = ['#e4572e', '#f3a712', '#ffffff', '#29335c', '#a8c686', '#db2763', '#17bebb', '#ffd23f', '#5c5c5c'];
+const shorts = ['#1f2933', '#2e3f5c', '#3b3b3b', '#e8e8e8'];
+let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+function person(facing) {
+  const g = new THREE.Group();
+  const mat = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: .8 });
+  const h = 1.62 + rnd() * .22, s = h / 1.75;
+  const skin = mat(skinTones[Math.floor(rnd() * skinTones.length)]);
+  const shirt = mat(shirts[Math.floor(rnd() * shirts.length)]), short = mat(shorts[Math.floor(rnd() * shorts.length)]);
+  const add = (geo, m, x, y, z, rz = 0) => { const o = new THREE.Mesh(geo, m); o.position.set(x * s, y * s, z * s); o.rotation.z = rz; o.castShadow = true; g.add(o); return o; };
+  for (const sx of [-.1, .1]) { add(new THREE.CylinderGeometry(.055 * s, .05 * s, .5 * s, 8), skin, sx, .25, 0); add(new THREE.CylinderGeometry(.075 * s, .07 * s, .3 * s, 8), short, sx, .62, 0); }
+  const shoe = mat('#f2f2f2');
+  for (const sx of [-.1, .1]) add(new THREE.BoxGeometry(.11 * s, .06 * s, .24 * s), shoe, sx, .03, .04);
+  add(new THREE.CapsuleGeometry(.17 * s, .38 * s, 4, 10), shirt, 0, 1.1, 0);
+  add(new THREE.SphereGeometry(.11 * s, 14, 10), skin, 0, 1.6, 0);
+  add(new THREE.CylinderGeometry(.04 * s, .035 * s, .55 * s, 8), skin, -.23, 1.1, 0, -.12);
+  const arm = add(new THREE.CylinderGeometry(.04 * s, .035 * s, .55 * s, 8), skin, .25, 1.14, .1, .2);
+  arm.rotation.x = .75;
+  const paddle = add(new THREE.BoxGeometry(.2 * s, .27 * s, .015 * s), mat('#1b1b1b'), .3, 1.02, .42);
+  paddle.rotation.x = -.3;
+  g.rotation.y = facing + (rnd() - .5) * .5;
+  return g;
+}
+const playersProposed = new THREE.Group(), playersToday = new THREE.Group();
+for (const c of courts) {
+  // doubles: one team up at the kitchen line, the other split back and up
+  const spots = [[-1.5, -2.6, 0], [1.5, -2.5, 0], [-1.4, 2.5, Math.PI], [1.6, 6.3, Math.PI]];
+  if (rnd() < .5) spots.forEach((p) => { p[1] *= -1; p[2] = p[2] ? 0 : Math.PI; });
+  for (const [dx, dz, f] of spots) { const p = person(f + Math.PI); p.position.set(c.x + dx + (rnd() - .5) * .4, .061, c.z + dz + (rnd() - .5) * .4); playersProposed.add(p); }
+}
+for (const x of TENNIS) for (const [dx, dz, f] of [[-2.2, -11.5, 0], [2.4, -5.5, 0], [-2.6, 6, Math.PI], [2.3, 11.6, Math.PI]]) {
+  const p = person(f + Math.PI); p.position.set(x + dx, 0.02, dz); playersToday.add(p);
+}
+scene.add(playersProposed, playersToday);
+
+// surface + lines, drawn to a canvas at 80 px per metre
+const PXM = 80;
+const padCanvas = document.createElement('canvas');
+padCanvas.width = Math.round(PAD_W * PXM); padCanvas.height = Math.round(PAD_L * PXM);
+const padTex = new THREE.CanvasTexture(padCanvas);
+padTex.colorSpace = THREE.SRGBColorSpace; padTex.anisotropy = maxAniso;
+function drawPad() {
+  const pal = PALETTES.find((p) => p.id === state.palette);
+  const g = padCanvas.getContext('2d'), W = padCanvas.width, H = padCanvas.height;
+  const X = (m) => (m + PAD_W / 2) * PXM, Z = (m) => (m + PAD_L / 2) * PXM, S = (m) => m * PXM;
+  g.fillStyle = pal.surround; g.fillRect(0, 0, W, H);
+  for (const c of courts) {
+    g.fillStyle = pal.court; g.fillRect(X(c.x - CW / 2), Z(c.z - CL / 2), S(CW), S(CL));
+    if (pal.kitchen !== pal.court) { g.fillStyle = pal.kitchen; g.fillRect(X(c.x - CW / 2), Z(c.z - KITCHEN), S(CW), S(KITCHEN * 2)); }
+  }
+  seed = 11; for (let i = 0, n = Math.round(W * H / 90); i < n; i++) { g.fillStyle = rnd() < .5 ? 'rgba(255,255,255,.035)' : 'rgba(0,0,0,.035)'; g.fillRect(rnd() * W, rnd() * H, 2, 2); }
+  g.fillStyle = '#f4f6f2';
+  const rect = (x, z, w, h) => g.fillRect(X(x), Z(z), S(w), S(h));
+  for (const c of courts) {
+    const l = c.x - CW / 2, t = c.z - CL / 2;
+    rect(l, t, CW, LINE); rect(l, c.z + CL / 2 - LINE, CW, LINE);
+    rect(l, t, LINE, CL); rect(c.x + CW / 2 - LINE, t, LINE, CL);
+    rect(l, c.z - KITCHEN, CW, LINE); rect(l, c.z + KITCHEN - LINE, CW, LINE);
+    rect(c.x - LINE / 2, t, LINE, CL / 2 - KITCHEN);
+    rect(c.x - LINE / 2, c.z + KITCHEN, LINE, CL / 2 - KITCHEN);
+  }
+  g.fillStyle = 'rgba(244,246,242,.9)'; g.font = `600 ${S(.5)}px Archivo, Arial`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  courts.forEach((c, i) => g.fillText(String(i + 1), X(c.x - CW / 2 - .55), Z(c.z)));
+  padTex.needsUpdate = true;
+}
+
+// ---------- the new south pad ----------
+const proposal = new THREE.Group(); scene.add(proposal);
+const sideMat = new THREE.MeshStandardMaterial({ color: '#3d4a40', roughness: .9, transparent: true });
+const topMat = new THREE.MeshStandardMaterial({ map: padTex, roughness: .82, transparent: true });
+const slab = new THREE.Mesh(new THREE.BoxGeometry(PAD_W, .06, PAD_L), [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]);
+slab.position.y = .03; slab.receiveShadow = true; proposal.add(slab);
+const TOP = .061;
+// the perimeter fence stays as it is today, gate on the east side near the north end
+const perimeter = new THREE.Group(); scene.add(perimeter);
+fenceRect(perimeter, -PAD_W / 2, -PAD_L / 2, PAD_W / 2, PAD_L / 2, FENCE_H, [{ side: 'e', from: -PAD_L / 2 + 1.2, to: -PAD_L / 2 + 2.4 }]);
+
+// nets
+const netMat = new THREE.MeshStandardMaterial({ color: '#111', alphaMap: NETTEX, transparent: true, side: THREE.DoubleSide, depthWrite: false, roughness: .9 });
+NETTEX.repeat.set(POSTS / .04, NET_SIDE / .04);
+const tapeMat = new THREE.MeshStandardMaterial({ color: '#f2f2ee', side: THREE.DoubleSide, roughness: .7 });
+const netPostMat = new THREE.MeshStandardMaterial({ color: '#202422', roughness: .4, metalness: .6 });
+function netGeometry(height, sagTop) {
+  const geo = new THREE.PlaneGeometry(POSTS, height, 24, 1);
+  const p = geo.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const u = p.getX(i) / (POSTS / 2), top = p.getY(i) > 0;
+    const sag = (NET_SIDE - NET_MID) * (1 - u * u);
+    p.setY(i, top ? sagTop - sag : sagTop - height);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+const NET_GEO = netGeometry(NET_SIDE - .05, NET_SIDE), TAPE_GEO = netGeometry(.05, NET_SIDE + .01);
+const POST_GEO = new THREE.CylinderGeometry(.032, .032, NET_SIDE + .04, 12);
+const nets = new THREE.Group(); nets.position.y = TOP; proposal.add(nets);
+for (const c of courts) {
+  const g = new THREE.Group(); g.position.set(c.x, 0, c.z);
+  const net = new THREE.Mesh(NET_GEO, netMat); net.renderOrder = 3; g.add(net);
+  g.add(new THREE.Mesh(TAPE_GEO, tapeMat));
+  for (const s of [-1, 1]) { const p = new THREE.Mesh(POST_GEO, netPostMat); p.position.set(s * POSTS / 2, (NET_SIDE + .04) / 2, 0); p.castShadow = true; g.add(p); }
+  const strap = new THREE.Mesh(new THREE.BoxGeometry(.05, NET_MID, .004), tapeMat); strap.position.y = NET_MID / 2; g.add(strap);
+  nets.add(g);
+}
+
+// fences between courts (rebuilt when options change)
+const dividers = new THREE.Group(); dividers.position.y = TOP; proposal.add(dividers);
+function buildDividers() {
+  dividers.clear();
+  if (state.dividers === 'none') return;
+  // one fence between the north and south rows, with walk-through openings at both ends and in the middle
+  const h = state.dividers === 'full' ? FENCE_H : LOW_H, gap = 1.2;
+  const runs = [[-PAD_W / 2 + gap, -gap / 2], [gap / 2, PAD_W / 2 - gap]];
+  for (const [a, b] of runs) fence(dividers, a, 0, b, 0, h);
+}
+
+// light poles (optional)
+const lightsGroup = new THREE.Group(); scene.add(lightsGroup);
+const spots = [];
+const headMat = new THREE.MeshStandardMaterial({ color: '#222', emissive: '#fff6e0', emissiveIntensity: 0, roughness: .4 });
+{
+  const poleMat = new THREE.MeshStandardMaterial({ color: '#2a302c', roughness: .5, metalness: .6 });
+  const H = 6.7;
+  for (const z of [-PAD_L / 2 + 4.6, -PAD_L / 2 + 13.8, PAD_L / 2 - 13.8, PAD_L / 2 - 4.6]) for (const s of [-1, 1]) {
+    const x = s * (PAD_W / 2 + .35);
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(.07, .09, H, 10), poleMat); pole.position.set(x, H / 2, z); pole.castShadow = true;
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(.9, .08, .08), poleMat); arm.position.set(x - s * .45, H, z);
+    const head = new THREE.Mesh(new THREE.BoxGeometry(.55, .1, .32), headMat); head.position.set(x - s * .9, H - .06, z);
+    lightsGroup.add(pole, arm, head);
+    const sp = new THREE.SpotLight('#fff3dc', 0, 42, Math.PI / 3, .6, 1.1);
+    sp.position.copy(head.position); sp.target.position.set(x - s * 9, 0, z); lightsGroup.add(sp, sp.target); spots.push(sp);
+  }
+}
+
+// existing north pad (tennis stays): its fence, over the photo
+const northFence = new THREE.Group(); scene.add(northFence);
+fenceRect(northFence, NORTH_PAD.cx - NORTH_PAD.w / 2, -PAD_L / 2 - NORTH_PAD.l, NORTH_PAD.cx + NORTH_PAD.w / 2, -PAD_L / 2 - .02, FENCE_H);
+
+// ---------- plan-view dimension lines ----------
+const dimGroup = new THREE.Group(); scene.add(dimGroup);
+const dimMat = new THREE.LineBasicMaterial({ color: '#ffffff' });
+const labelsEl = document.getElementById('labels');
+const dimLabels = [];
+function dimLine(a, b, text, offset = [0, 0]) {
+  const y = 4;
+  const dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz), nx = -dz / L * .5, nz = dx / L * .5;
+  const v = (x, z) => new THREE.Vector3(x, y, z);
+  const geo = new THREE.BufferGeometry().setFromPoints([v(a[0], a[1]), v(b[0], b[1]), v(a[0] - nx, a[1] - nz), v(a[0] + nx, a[1] + nz), v(b[0] - nx, b[1] - nz), v(b[0] + nx, b[1] + nz)]);
+  dimGroup.add(new THREE.LineSegments(geo, dimMat));
+  const el = document.createElement('div'); el.className = 'dim'; el.textContent = text; labelsEl.appendChild(el);
+  dimLabels.push({ el, text, at: new THREE.Vector3((a[0] + b[0]) / 2 + offset[0], y, (a[1] + b[1]) / 2 + offset[1]) });
+}
+{
+  const c = courts[4];
+  dimLine([-PAD_W / 2, PAD_L / 2 + 1.6], [PAD_W / 2, PAD_L / 2 + 1.6], '33.6 m · 110 ft', [0, 1.1]);
+  dimLine([-PAD_W / 2 - 1.6, -PAD_L / 2], [-PAD_W / 2 - 1.6, PAD_L / 2], '36.9 m · 121 ft', [-3.4, 0]);
+  dimLine([c.x - CW / 2, c.z + CL / 2 + .9], [c.x + CW / 2, c.z + CL / 2 + .9], '20 ft', [0, .8]);
+  dimLine([c.x + CW / 2 + .5, c.z - CL / 2], [c.x + CW / 2 + .5, c.z + CL / 2], '44 ft', [1.3, 3]);
+  dimLine([c.x + CW / 2, c.z - 3], [courts[5].x - CW / 2, c.z - 3], '2.30 m', [0, -.8]);
+  dimLine([courts[5].x + 1.2, courts[5].z + CL / 2], [courts[5].x + 1.2, PAD_L / 2], '2.51 m', [1.6, 0]);
+  dimLine([courts[6].x + 1.2, courts[6].z - KITCHEN], [courts[6].x + 1.2, courts[6].z], '7 ft', [1.2, 0]);
+}
+
+// ---------- cameras, views and smooth moves ----------
+const persp = new THREE.PerspectiveCamera(38, 1, .1, 1500);
+const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, .1, 500);
+let camera = persp;
+const controls = new OrbitControls(persp, renderer.domElement);
+controls.enableDamping = true; controls.maxPolarAngle = Math.PI / 2.05; controls.minDistance = 3; controls.maxDistance = 260;
+controls.autoRotateSpeed = .45;
+const VIEWS = {
+  aerial: { pos: [34, 40, 50], target: [-1, 0, -6], fov: 38 },
+  'aerial-west': { pos: [-44, 36, 40], target: [2, 0, -6], fov: 38 },
+  court: { pos: [-15.5, 1.7, 17.2], target: [6, 1.2, -4], fov: 60 },
+  close: { pos: [-22, 14, 26], target: [-3, 0, 2], fov: 40 },
+  wide: { pos: [70, 75, 95], target: [0, 0, -14], fov: 38 },
+};
+let move = null; // { from, to, t }
+const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+function setView(v, animate = true) {
+  state.view = v;
+  document.querySelectorAll('#views button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+  const plan = v === 'plan';
+  dimGroup.visible = plan; labelsEl.hidden = !plan; document.getElementById('legend').hidden = !plan;
+  if (plan) { camera = ortho; controls.enabled = false; move = null; ortho.position.set(0, 120, 0); ortho.up.set(0, 0, -1); ortho.lookAt(0, 0, 0); }
+  else {
+    const s = VIEWS[v];
+    const wasPlan = camera === ortho; camera = persp; controls.enabled = true;
+    if (animate && !wasPlan && !reduced) move = { p0: persp.position.clone(), t0: controls.target.clone(), f0: persp.fov, p1: new THREE.Vector3(...s.pos), t1: new THREE.Vector3(...s.target), f1: s.fov, t: 0 };
+    else { move = null; persp.position.set(...s.pos); controls.target.set(...s.target); persp.fov = s.fov; persp.updateProjectionMatrix(); }
+  }
+  controls.autoRotate = false;
+  resize();
+  if (['aerial', 'aerial-west', 'plan', 'court'].includes(v) && location.hash.slice(1) !== v) history.replaceState(null, '', '#' + v);
+}
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h, false);
+  persp.aspect = w / h; persp.updateProjectionMatrix();
+  const needW = PAD_W + 16, needH = PAD_L + 12;
+  const half = Math.max(needH / 2, needW / 2 * h / w);
+  ortho.top = half; ortho.bottom = -half; ortho.left = -half * w / h; ortho.right = half * w / h; ortho.updateProjectionMatrix();
+  const sb = document.querySelector('#scalebar div'); if (sb) sb.style.width = (10 / ((2 * half * w / h) / w)) + 'px';
+}
+window.addEventListener('resize', resize);
+
+// ---------- state → scene ----------
+let reveal = 1; // 0..1 build-up of the proposal
+function apply() {
+  const today = state.mode === 'today';
+  proposal.visible = !today || reveal < 1;
+  playersProposed.visible = state.players && !today; playersToday.visible = state.players && today;
+  lightsGroup.visible = state.lights;
+  buildDividers(); drawPad();
+  const dusk = state.dusk;
+  scene.background.copy(dusk ? SKY_DUSK : SKY_DAY); scene.fog.color.copy(scene.background);
+  hemi.intensity = dusk ? .3 : 1.25; sun.intensity = dusk ? .1 : 2.1;
+  photoMat.color.set(dusk ? '#4a5266' : '#ffffff'); outer.material.color.set(dusk ? '#232a22' : '#5f6e45');
+  const on = dusk && state.lights;
+  headMat.emissiveIntensity = on ? 3 : 0; spots.forEach((s) => (s.intensity = on ? 70 : 0));
+  controls.autoRotate = state.spin && camera === persp;
+  document.getElementById('spin').checked = state.spin;
+  for (const id of ['players', 'lights', 'dusk']) document.getElementById(id).checked = state[id];
+  document.querySelectorAll('#mode button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === state.mode)));
+  document.querySelectorAll('#dividers button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === state.dividers)));
+  document.querySelectorAll('#colours button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === state.palette)));
+  document.getElementById('statN').textContent = today ? '8' : '32';
+  document.getElementById('statT').innerHTML = today ? 'players at once<br>on 2 tennis courts' : 'players at once<br>on 8 pickleball courts';
+}
+function setMode(m) {
+  if (m === state.mode) return;
+  state.mode = m;
+  reveal = m === 'proposed' && !reduced ? 0 : 1;
+  if (m === 'today') reveal = 1;
+  apply();
+}
+function stepReveal(dt) {
+  if (reveal >= 1) return;
+  reveal = Math.min(1, reveal + dt / 2.2);
+  const k = (a, b) => ease(Math.min(1, Math.max(0, (reveal - a) / (b - a))));
+  topMat.opacity = sideMat.opacity = k(0, .45);
+  nets.scale.y = Math.max(.001, k(.4, .7));
+  dividers.scale.y = Math.max(.001, k(.55, .9));
+  playersProposed.visible = state.players && reveal > .75;
+  if (reveal >= 1) { topMat.opacity = sideMat.opacity = 1; nets.scale.y = dividers.scale.y = 1; apply(); }
+}
+
+// ---------- present mode: a short story for a meeting ----------
+const STEPS = [
+  { title: 'Jericho Beach Park today', text: 'The south court pad: two tennis courts inside the existing fence.', state: { mode: 'today', view: 'aerial', players: true, dusk: false, lights: false } },
+  { title: 'Same pad, eight courts', text: 'Eight regulation pickleball courts fit inside the fence that is already there. New surface, nets and posts.', state: { mode: 'proposed', view: 'aerial', players: false, dusk: false, lights: false } },
+  { title: 'Drawn to true size', text: 'Measured from aerial imagery: a 33.6 × 36.9 m pad and 20 × 44 ft courts with 7 ft kitchens.', state: { mode: 'proposed', view: 'plan', players: false } },
+  { title: 'Four times the players', text: 'From 8 players at once on two tennis courts to 32 on eight pickleball courts.', state: { mode: 'proposed', view: 'close', players: true } },
+  { title: 'A fence between the rows', text: 'One fence between the north and south courts stops stray balls from crossing into the next game.', state: { mode: 'proposed', view: 'court', players: true } },
+  { title: 'A destination court for the west side', text: 'Eight courts beside the beach, the trail and the sailing centre.', state: { mode: 'proposed', view: 'wide', players: true }, spin: true },
+];
+let step = -1;
+const storyEl = document.getElementById('story'), deckEl = document.getElementById('deck');
+const dotsEl = document.getElementById('dots');
+STEPS.forEach(() => dotsEl.appendChild(document.createElement('i')));
+function showStep(i) {
+  step = Math.max(0, Math.min(STEPS.length - 1, i));
+  const s = STEPS[step];
+  const { mode, view, ...rest } = s.state;
+  Object.assign(state, rest, { spin: false });
+  if (mode) setMode(mode);
+  apply();
+  setView(view);
+  if (s.spin) setTimeout(() => { if (step === STEPS.indexOf(s)) { state.spin = true; apply(); } }, 1600);
+  document.getElementById('storyN').textContent = `${step + 1} / ${STEPS.length}`;
+  document.getElementById('storyH').textContent = s.title;
+  document.getElementById('storyP').textContent = s.text;
+  [...dotsEl.children].forEach((d, j) => d.classList.toggle('on', j === step));
+  document.getElementById('next').textContent = step === STEPS.length - 1 ? 'Start over' : 'Next ›';
+}
+function present(on) {
+  document.body.classList.toggle('present', on);
+  storyEl.hidden = deckEl.hidden = !on;
+  if (on) { document.documentElement.requestFullscreen?.().catch(() => {}); showStep(0); }
+  else { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); step = -1; state.spin = false; apply(); }
+  setTimeout(resize, 50);
+}
+document.getElementById('present').onclick = () => present(true);
+document.getElementById('exit').onclick = () => present(false);
+document.getElementById('next').onclick = () => showStep(step === STEPS.length - 1 ? 0 : step + 1);
+document.getElementById('prev').onclick = () => showStep(step - 1);
+window.addEventListener('keydown', (e) => {
+  if (!document.body.classList.contains('present')) return;
+  if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); showStep(step === STEPS.length - 1 ? 0 : step + 1); }
+  else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); showStep(step - 1); }
+  else if (e.key === 'Escape') present(false);
+});
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('present')) setTimeout(resize, 50); });
+
+// ---------- save a picture (2× resolution, with plan labels) ----------
+document.getElementById('save').onclick = () => {
+  const w = stage.clientWidth, h = stage.clientHeight, pr = renderer.getPixelRatio(), k = 2;
+  renderer.setPixelRatio(k); renderer.setSize(w, h, false); renderer.render(scene, camera);
+  const out = document.createElement('canvas'); out.width = w * k; out.height = h * k;
+  const g = out.getContext('2d'); g.drawImage(renderer.domElement, 0, 0);
+  if (state.view === 'plan') {
+    g.font = `500 ${11 * k}px "IBM Plex Mono", monospace`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    for (const d of dimLabels) {
+      tmp.copy(d.at).project(ortho); const x = (tmp.x + 1) / 2 * w * k, y = (1 - tmp.y) / 2 * h * k, tw = g.measureText(d.text).width + 10 * k;
+      g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(x - tw / 2, y - 9 * k, tw, 18 * k); g.fillStyle = '#1d2620'; g.fillText(d.text, x, y);
+    }
+  }
+  g.font = `400 ${10 * k}px "Public Sans", sans-serif`; g.textAlign = 'left'; g.fillStyle = '#fff'; g.shadowColor = '#000a'; g.shadowBlur = 3 * k;
+  g.fillText('Aerial: Esri, Maxar, Earthstar Geographics · concept drawn to scale', 10 * k, h * k - 10 * k);
+  renderer.setPixelRatio(pr); renderer.setSize(w, h, false);
+  out.toBlob((blob) => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `jericho-courts-${state.mode}-${state.view}.png`; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }, 'image/png');
+};
+
+// ---------- panel controls ----------
+const coloursEl = document.getElementById('colours');
+for (const p of PALETTES) {
+  const b = document.createElement('button'); b.className = 'sw'; b.dataset.p = p.id; b.title = p.name; b.setAttribute('aria-label', p.name);
+  b.style.background = p.surround; b.innerHTML = `<i style="background:linear-gradient(${p.court} 0 35%, ${p.kitchen} 35% 65%, ${p.court} 65%)"></i>`;
+  b.onclick = () => { state.palette = p.id; apply(); };
+  coloursEl.appendChild(b);
+}
+document.querySelectorAll('#mode button').forEach((b) => (b.onclick = () => setMode(b.dataset.m)));
+document.querySelectorAll('#views button').forEach((b) => (b.onclick = () => setView(b.dataset.v)));
+document.querySelectorAll('#dividers button').forEach((b) => (b.onclick = () => { state.dividers = b.dataset.d; apply(); }));
+for (const id of ['players', 'lights', 'dusk', 'spin']) document.getElementById(id).onchange = (e) => { state[id] = e.target.checked; apply(); };
+document.getElementById('toggle').onclick = (e) => { const p = document.getElementById('panel'); const m = p.classList.toggle('min'); e.target.textContent = m ? 'Options' : 'Hide'; setTimeout(resize, 0); };
+window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (v in VIEWS || v === 'plan') setView(v); });
+controls.addEventListener('start', () => { move = null; if (state.spin && !document.body.classList.contains('present')) return; });
+// for still renders from a script
+window.__set = (o) => { const { mode, view, ...rest } = o; Object.assign(state, rest); if (mode) { state.mode = mode; reveal = 1; } apply(); if (view) setView(view, false); };
+window.__present = (i) => { present(true); showStep(i); move = null; const v = VIEWS[STEPS[i].state.view]; if (v) { persp.position.set(...v.pos); controls.target.set(...v.target); persp.fov = v.fov; persp.updateProjectionMatrix(); } reveal = 1; stepReveal(0); apply(); };
+
+// ---------- loop ----------
+const tmp = new THREE.Vector3();
+const clock = new THREE.Clock();
+function frame() {
+  const dt = Math.min(.05, clock.getDelta());
+  if (move) {
+    move.t = Math.min(1, move.t + dt / 1.6); const e = ease(move.t);
+    persp.position.lerpVectors(move.p0, move.p1, e); controls.target.lerpVectors(move.t0, move.t1, e);
+    persp.fov = move.f0 + (move.f1 - move.f0) * e; persp.updateProjectionMatrix();
+    if (move.t >= 1) move = null;
+  }
+  stepReveal(dt);
+  controls.update();
+  renderer.render(scene, camera);
+  if (state.view === 'plan') {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    for (const d of dimLabels) { tmp.copy(d.at).project(ortho); d.el.style.left = ((tmp.x + 1) / 2 * w) + 'px'; d.el.style.top = ((1 - tmp.y) / 2 * h) + 'px'; }
+    document.querySelector('#north svg').style.transform = `rotate(${-ROT}rad)`;
+  }
+  requestAnimationFrame(frame);
+}
+apply();
+const start = location.hash.slice(1);
+setView(start in VIEWS || start === 'plan' ? start : 'aerial', false);
+document.fonts?.ready.then(drawPad);
+frame();
+</script>
+</body>
+</html>

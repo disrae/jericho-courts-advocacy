@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
   // Parent ~/pnpm-lock.yaml made Next treat ~ as the workspace root,
   // which 404'd /_next/static/css/app/layout.css in dev.
   outputFileTracingRoot: projectRoot,
+  // /3d is a static three.js page in public/3d (to-scale court concept).
+  async rewrites() {
+    return [{ source: "/3d", destination: "/3d/index.html" }];
+  },
 };
 
 export default nextConfig;
