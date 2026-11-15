@@ -133,10 +133,11 @@ body.clean #panel, body.clean #deck, body.clean #story, body.clean #stat { displ
     <div class="grp"><span>Fence between north and south courts</span>
       <div class="seg" id="dividers">
         <button data-d="none">None</button>
-        <button data-d="low">Low, 4 ft</button>
-        <button data-d="full" aria-pressed="true">Full, 10 ft</button>
+        <button data-d="ft3">3 ft</button>
+        <button data-d="ft4" aria-pressed="true">4 ft</button>
       </div>
-      <p class="note">One fence between the two rows of baselines. There isn't room for fences between side-by-side courts.</p>
+      <label class="chk"><input type="checkbox" id="screen" checked> Green windscreen on it</label>
+      <p class="note">One low, continuous fence between the two rows of baselines, open at each end to walk through. There isn't room for fences between side-by-side courts.</p>
     </div>
 
     <div class="grp"><span>Show</span>
@@ -217,7 +218,7 @@ const PALETTES = [
   { id: 'slate', name: 'Blue on grey', surround: '#6b7470', court: '#2f5f9c', kitchen: '#2f5f9c' },
 ];
 
-const state = { view: 'aerial', mode: 'proposed', dividers: 'full', palette: 'classic', players: true, lights: false, dusk: false, spin: false };
+const state = { view: 'aerial', mode: 'proposed', dividers: 'ft4', screen: true, palette: 'classic', players: true, lights: false, dusk: false, spin: false };
 
 // ---------- renderer / scene ----------
 const stage = document.getElementById('stage');
@@ -428,14 +429,19 @@ for (const c of courts) {
 }
 
 // fences between courts (rebuilt when options change)
+const screenMat = new THREE.MeshStandardMaterial({ color: '#1f3a2b', roughness: .95, side: THREE.DoubleSide, transparent: true, opacity: .93 });
 const dividers = new THREE.Group(); dividers.position.y = TOP; proposal.add(dividers);
 function buildDividers() {
   dividers.clear();
   if (state.dividers === 'none') return;
   // one fence between the north and south rows, with walk-through openings at both ends and in the middle
-  const h = state.dividers === 'full' ? FENCE_H : LOW_H, gap = 1.2;
-  const runs = [[-PAD_W / 2 + gap, -gap / 2], [gap / 2, PAD_W / 2 - gap]];
-  for (const [a, b] of runs) fence(dividers, a, 0, b, 0, h);
+  const h = state.dividers === 'ft3' ? 3 * FT : LOW_H, gap = 1.2;
+  const a = -PAD_W / 2 + gap, b = PAD_W / 2 - gap;
+  fence(dividers, a, 0, b, 0, h);
+  if (state.screen) {
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(b - a, h - .12), screenMat);
+    scr.position.set((a + b) / 2, (h - .12) / 2 + .06, .015); scr.receiveShadow = true; dividers.add(scr);
+  }
 }
 
 // light poles (optional)
@@ -545,7 +551,7 @@ function apply() {
   headMat.emissiveIntensity = on ? 3 : 0; spots.forEach((s) => (s.intensity = on ? 70 : 0));
   controls.autoRotate = state.spin && camera === persp;
   document.getElementById('spin').checked = state.spin;
-  for (const id of ['players', 'lights', 'dusk']) document.getElementById(id).checked = state[id];
+  for (const id of ['players', 'lights', 'dusk', 'screen']) document.getElementById(id).checked = state[id];
   document.querySelectorAll('#mode button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === state.mode)));
   document.querySelectorAll('#dividers button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === state.dividers)));
   document.querySelectorAll('#colours button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === state.palette)));
@@ -576,7 +582,7 @@ const STEPS = [
   { title: 'Same pad, eight courts', text: 'Eight regulation pickleball courts fit inside the fence that is already there. New surface, nets and posts.', state: { mode: 'proposed', view: 'aerial', players: false, dusk: false, lights: false } },
   { title: 'Drawn to true size', text: 'Measured from aerial imagery: a 33.6 × 36.9 m pad and 20 × 44 ft courts with 7 ft kitchens.', state: { mode: 'proposed', view: 'plan', players: false } },
   { title: 'Four times the players', text: 'From 8 players at once on two tennis courts to 32 on eight pickleball courts.', state: { mode: 'proposed', view: 'close', players: true } },
-  { title: 'A fence between the rows', text: 'One fence between the north and south courts stops stray balls from crossing into the next game.', state: { mode: 'proposed', view: 'court', players: true } },
+  { title: 'A low fence between the rows', text: 'One continuous 4 ft fence between the north and south courts stops stray balls rolling into the next game.', state: { mode: 'proposed', view: 'court', players: true } },
   { title: 'A destination court for the west side', text: 'Eight courts beside the beach, the trail and the sailing centre.', state: { mode: 'proposed', view: 'wide', players: true }, spin: true },
 ];
 let step = -1;
@@ -651,7 +657,7 @@ for (const p of PALETTES) {
 document.querySelectorAll('#mode button').forEach((b) => (b.onclick = () => setMode(b.dataset.m)));
 document.querySelectorAll('#views button').forEach((b) => (b.onclick = () => setView(b.dataset.v)));
 document.querySelectorAll('#dividers button').forEach((b) => (b.onclick = () => { state.dividers = b.dataset.d; apply(); }));
-for (const id of ['players', 'lights', 'dusk', 'spin']) document.getElementById(id).onchange = (e) => { state[id] = e.target.checked; apply(); };
+for (const id of ['players', 'lights', 'dusk', 'spin', 'screen']) document.getElementById(id).onchange = (e) => { state[id] = e.target.checked; apply(); };
 document.getElementById('toggle').onclick = (e) => { const p = document.getElementById('panel'); const m = p.classList.toggle('min'); e.target.textContent = m ? 'Options' : 'Hide'; setTimeout(resize, 0); };
 window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (v in VIEWS || v === 'plan') setView(v); });
 controls.addEventListener('start', () => { move = null; if (state.spin && !document.body.classList.contains('present')) return; });
