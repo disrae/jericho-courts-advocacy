@@ -48,6 +48,13 @@ button:focus-visible, label:focus-within { outline: 2px solid var(--accent); out
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .sw { width: 30px; height: 30px; padding: 0; position: relative; overflow: hidden; }
 .sw i { position: absolute; inset: 7px; border-radius: 2px; }
+.vids { display: flex; flex-direction: column; gap: 6px; }
+a.dl { display: block; font: 600 13px var(--body); color: var(--accent-ink); background: var(--accent); border-radius: 6px; padding: 9px 10px; text-decoration: none; }
+.thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+a.th { display: flex; flex-direction: column; gap: 3px; color: var(--ink); text-decoration: none; font-size: 12px; min-width: 0; }
+a.th img { width: 100%; height: auto; border-radius: 4px; border: 1px solid var(--line); display: block; }
+a.th:hover span { text-decoration: underline; }
+a.dl:focus-visible, a.th:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 label.chk { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
 label.chk input { accent-color: var(--accent); width: 16px; height: 16px; }
 dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 5px 10px; font-size: 13px; }
@@ -118,6 +125,25 @@ body.clean #panel, body.clean #deck, body.clean #story, body.clean #stat { displ
         <button class="cta" id="present">Present</button>
         <button id="save">Save image</button>
       </div>
+    </div>
+
+    <div class="grp"><span>Download pictures and video</span>
+      <div class="vids">
+        <a class="dl" href="/3d/media/jericho-courts-flyover.mp4" download>Flyover video, 29 s, with music</a>
+        <a class="dl" href="/3d/media/jericho-courts-flyover-silent.mp4" download>Flyover video, no sound</a>
+      </div>
+      <div class="thumbs">
+        <a class="th" href="/3d/media/jericho-courts-before-after.jpg" download><img src="/3d/media/thumb-before-after.jpg" alt="Before and after" loading="lazy" width="320" height="180"><span>Before and after</span></a>
+        <a class="th" href="/3d/media/jericho-courts-proposed-aerial.jpg" download><img src="/3d/media/thumb-proposed-aerial.jpg" alt="Proposed, aerial" loading="lazy" width="320" height="180"><span>Proposed, aerial</span></a>
+        <a class="th" href="/3d/media/jericho-courts-today-aerial.jpg" download><img src="/3d/media/thumb-today-aerial.jpg" alt="Today, aerial" loading="lazy" width="320" height="180"><span>Today, aerial</span></a>
+        <a class="th" href="/3d/media/jericho-courts-players.jpg" download><img src="/3d/media/thumb-players.jpg" alt="32 players" loading="lazy" width="320" height="180"><span>32 players</span></a>
+        <a class="th" href="/3d/media/jericho-courts-plan-measured.jpg" download><img src="/3d/media/thumb-plan-measured.jpg" alt="Measured plan" loading="lazy" width="320" height="180"><span>Measured plan</span></a>
+        <a class="th" href="/3d/media/jericho-courts-courtside.jpg" download><img src="/3d/media/thumb-courtside.jpg" alt="Courtside" loading="lazy" width="320" height="180"><span>Courtside</span></a>
+        <a class="th" href="/3d/media/jericho-courts-from-west.jpg" download><img src="/3d/media/thumb-from-west.jpg" alt="From the west" loading="lazy" width="320" height="180"><span>From the west</span></a>
+        <a class="th" href="/3d/media/jericho-courts-wide-context.jpg" download><img src="/3d/media/thumb-wide-context.jpg" alt="In the park" loading="lazy" width="320" height="180"><span>In the park</span></a>
+        <a class="th" href="/3d/media/jericho-courts-option-dusk-lights.jpg" download><img src="/3d/media/thumb-option-dusk-lights.jpg" alt="Option: lights at dusk" loading="lazy" width="320" height="180"><span>Option: lights at dusk</span></a>
+      </div>
+      <p class="note">Pictures are 1920 × 1080, rendered from this model. Free to use in slides and emails.</p>
     </div>
 
     <div class="grp"><span>View</span>
