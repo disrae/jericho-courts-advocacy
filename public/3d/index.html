@@ -327,23 +327,49 @@ const shirts = ['#e4572e', '#f3a712', '#ffffff', '#29335c', '#a8c686', '#db2763'
 const shorts = ['#1f2933', '#2e3f5c', '#3b3b3b', '#e8e8e8'];
 let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 function person(facing) {
+  // a player in the ready position: knees soft, both hands out front, paddle tip-up with its face toward the net.
+  // local +z is forward (toward the net), +x is the player's left.
   const g = new THREE.Group();
   const mat = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: .8 });
-  const h = 1.62 + rnd() * .22, s = h / 1.75;
+  const h = 1.6 + rnd() * .24, s = h / 1.75;
   const skin = mat(skinTones[Math.floor(rnd() * skinTones.length)]);
   const shirt = mat(shirts[Math.floor(rnd() * shirts.length)]), short = mat(shorts[Math.floor(rnd() * shorts.length)]);
-  const add = (geo, m, x, y, z, rz = 0) => { const o = new THREE.Mesh(geo, m); o.position.set(x * s, y * s, z * s); o.rotation.z = rz; o.castShadow = true; g.add(o); return o; };
-  for (const sx of [-.1, .1]) { add(new THREE.CylinderGeometry(.055 * s, .05 * s, .5 * s, 8), skin, sx, .25, 0); add(new THREE.CylinderGeometry(.075 * s, .07 * s, .3 * s, 8), short, sx, .62, 0); }
-  const shoe = mat('#f2f2f2');
-  for (const sx of [-.1, .1]) add(new THREE.BoxGeometry(.11 * s, .06 * s, .24 * s), shoe, sx, .03, .04);
-  add(new THREE.CapsuleGeometry(.17 * s, .38 * s, 4, 10), shirt, 0, 1.1, 0);
-  add(new THREE.SphereGeometry(.11 * s, 14, 10), skin, 0, 1.6, 0);
-  add(new THREE.CylinderGeometry(.04 * s, .035 * s, .55 * s, 8), skin, -.23, 1.1, 0, -.12);
-  const arm = add(new THREE.CylinderGeometry(.04 * s, .035 * s, .55 * s, 8), skin, .25, 1.14, .1, .2);
-  arm.rotation.x = .75;
-  const paddle = add(new THREE.BoxGeometry(.2 * s, .27 * s, .015 * s), mat('#1b1b1b'), .3, 1.02, .42);
-  paddle.rotation.x = -.3;
-  g.rotation.y = facing + (rnd() - .5) * .5;
+  const hair = mat(['#2b1d14', '#5a3b22', '#1a1a1a', '#8a6a45', '#bfb6a8'][Math.floor(rnd() * 5)]);
+  const V = (x, y, z) => new THREE.Vector3(x * s, y * s, z * s);
+  const up = new THREE.Vector3(0, 1, 0);
+  const limb = (a, b, r0, r1, m) => {
+    const d = new THREE.Vector3().subVectors(b, a), o = new THREE.Mesh(new THREE.CylinderGeometry(r1 * s, r0 * s, d.length(), 10), m);
+    o.position.copy(a).addScaledVector(d, .5); o.quaternion.setFromUnitVectors(up, d.normalize()); o.castShadow = true; g.add(o); return o;
+  };
+  const ball = (p, r, m, sy = 1) => { const o = new THREE.Mesh(new THREE.SphereGeometry(r * s, 14, 10), m); o.position.copy(p); o.scale.y = sy; o.castShadow = true; g.add(o); return o; };
+  // legs: athletic stance, knees forward
+  for (const sx of [1, -1]) {
+    const hip = V(.1 * sx, .9, 0), knee = V(.15 * sx, .5, .1), ankle = V(.17 * sx, .08, 0);
+    limb(hip, knee, .07, .06, skin); limb(knee, ankle, .055, .045, skin); ball(knee, .055, skin);
+    const shoe = new THREE.Mesh(new THREE.BoxGeometry(.11 * s, .07 * s, .26 * s), mat('#f2f2f2')); shoe.position.copy(V(.17 * sx, .035, .05)); shoe.castShadow = true; g.add(shoe);
+  }
+  limb(V(0, .72, 0), V(0, .97, 0), .17, .165, short);                       // shorts
+  limb(V(0, .95, .01), V(0, 1.4, .03), .16, .2, shirt);                     // torso, wider at the shoulders
+  for (const sx of [1, -1]) ball(V(.18 * sx, 1.37, .03), .062, shirt);      // shoulders
+  limb(V(0, 1.4, .03), V(0, 1.5, .04), .05, .045, skin);                    // neck
+  const head = ball(V(0, 1.6, .05), .105, skin);
+  ball(V(0, 1.64, .03), .11, hair, .75);                                    // hair
+  if (rnd() < .3) { const visor = new THREE.Mesh(new THREE.CylinderGeometry(.115 * s, .115 * s, .03 * s, 16, 1, true), mat('#f5f5f5')); visor.position.copy(V(0, 1.66, .05)); g.add(visor); }
+  // arms: elbows bent, hands out front at waist-to-chest height
+  const handR = V(-.17, 1.06, .4), handL = V(.15, 1.04, .36);
+  for (const [sx, hand] of [[-1, handR], [1, handL]]) {
+    const sh = V(.2 * sx, 1.36, .03), el = V(.25 * sx, 1.1, .14);
+    limb(sh, el, .045, .04, skin); ball(el, .04, skin); limb(el, hand, .04, .034, skin); ball(hand, .04, skin);
+  }
+  // paddle in the right hand: grip in the fist, tip up, face toward the net
+  const paddle = new THREE.Group(); paddle.position.copy(handR);
+  const pc = mat(['#1b1b1b', '#1f4fa3', '#c2272d', '#f2f2f2', '#127a6a'][Math.floor(rnd() * 5)]);
+  const grip = new THREE.Mesh(new THREE.CylinderGeometry(.016 * s, .016 * s, .14 * s, 8), mat('#222')); grip.position.y = .03 * s; paddle.add(grip);
+  const face = new THREE.Mesh(new THREE.BoxGeometry(.2 * s, .24 * s, .014 * s), pc); face.position.y = .22 * s; face.castShadow = true; paddle.add(face);
+  const edge = new THREE.Mesh(new THREE.BoxGeometry(.205 * s, .245 * s, .008 * s), mat('#111')); edge.position.y = .22 * s; paddle.add(edge);
+  paddle.rotation.set(-.2, 0, .18);                                          // tipped a little forward and out
+  g.add(paddle);
+  g.rotation.y = facing + (rnd() - .5) * .35;
   return g;
 }
 const playersProposed = new THREE.Group(), playersToday = new THREE.Group();
@@ -351,10 +377,10 @@ for (const c of courts) {
   // doubles: one team up at the kitchen line, the other split back and up
   const spots = [[-1.5, -2.6, 0], [1.5, -2.5, 0], [-1.4, 2.5, Math.PI], [1.6, 6.3, Math.PI]];
   if (rnd() < .5) spots.forEach((p) => { p[1] *= -1; p[2] = p[2] ? 0 : Math.PI; });
-  for (const [dx, dz, f] of spots) { const p = person(f + Math.PI); p.position.set(c.x + dx + (rnd() - .5) * .4, .061, c.z + dz + (rnd() - .5) * .4); playersProposed.add(p); }
+  for (const [dx, dz, f] of spots) { const p = person(f); p.position.set(c.x + dx + (rnd() - .5) * .4, .061, c.z + dz + (rnd() - .5) * .4); playersProposed.add(p); }
 }
 for (const x of TENNIS) for (const [dx, dz, f] of [[-2.2, -11.5, 0], [2.4, -5.5, 0], [-2.6, 6, Math.PI], [2.3, 11.6, Math.PI]]) {
-  const p = person(f + Math.PI); p.position.set(x + dx, 0.02, dz); playersToday.add(p);
+  const p = person(f); p.position.set(x + dx, 0.02, dz); playersToday.add(p);
 }
 scene.add(playersProposed, playersToday);
 
@@ -434,14 +460,35 @@ const dividers = new THREE.Group(); dividers.position.y = TOP; proposal.add(divi
 function buildDividers() {
   dividers.clear();
   if (state.dividers === 'none') return;
-  // one fence between the north and south rows, with walk-through openings at both ends and in the middle
-  const h = state.dividers === 'ft3' ? 3 * FT : LOW_H, gap = 1.2;
-  const a = -PAD_W / 2 + gap, b = PAD_W / 2 - gap;
+  // one fence between the north and south rows, wall to wall, with a gate at each end
+  const h = state.dividers === 'ft3' ? 3 * FT : LOW_H, GW = 1.2;
+  const a = -PAD_W / 2 + GW, b = PAD_W / 2 - GW;
   fence(dividers, a, 0, b, 0, h);
+  gate(dividers, -PAD_W / 2 + .04, a, 0, h, +1);   // hinged on the west perimeter post, latch at the east end
+  gate(dividers, PAD_W / 2 - .04, b, 0, h, -1);    // hinged on the east perimeter post
   if (state.screen) {
     const scr = new THREE.Mesh(new THREE.PlaneGeometry(b - a, h - .12), screenMat);
     scr.position.set((a + b) / 2, (h - .12) / 2 + .06, .015); scr.receiveShadow = true; dividers.add(scr);
   }
+}
+// a framed chain-link gate between xh (hinge side) and xl (latch post), with a heavier latch post and a drop latch
+function gate(group, xh, xl, z, h, dir) {
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(.048, .048, h + .08, 12), postMat);
+  post.position.set(xl, (h + .08) / 2, z); post.castShadow = true; group.add(post);
+  const x0 = Math.min(xh, xl) + .05, x1 = Math.max(xh, xl) - .05, y0 = .06, y1 = h - .03, w = x1 - x0, gh = y1 - y0;
+  const bar = (ax, ay, bx, by) => {
+    const L = Math.hypot(bx - ax, by - ay), m = new THREE.Mesh(new THREE.CylinderGeometry(.017, .017, L, 8), postMat);
+    m.position.set((ax + bx) / 2, (ay + by) / 2, z); m.rotation.z = Math.atan2(bx - ax, by - ay) * -1; m.castShadow = true; group.add(m);
+  };
+  bar(x0, y0, x1, y0); bar(x0, y1, x1, y1); bar(x0, y0, x0, y1); bar(x1, y0, x1, y1);   // frame
+  bar(x0, y0, x1, y1);                                                                  // brace
+  const panel = new THREE.Mesh(new THREE.PlaneGeometry(w, gh), fenceMaterial(w, gh));
+  panel.position.set((x0 + x1) / 2, (y0 + y1) / 2, z); panel.renderOrder = 2; group.add(panel);
+  // hinges on the hinge side, latch on the latch side
+  const hx = dir > 0 ? x0 : x1, lx = dir > 0 ? x1 : x0;
+  for (const y of [y0 + .12, y1 - .12]) { const hg = new THREE.Mesh(new THREE.BoxGeometry(.07, .05, .06), postMat); hg.position.set(hx - dir * .03, y, z); group.add(hg); }
+  const latch = new THREE.Mesh(new THREE.BoxGeometry(.1, .06, .07), new THREE.MeshStandardMaterial({ color: '#8a8f8c', metalness: .7, roughness: .35 }));
+  latch.position.set(lx + dir * .04, y1 - .1, z); group.add(latch);
 }
 
 // light poles (optional)
