@@ -30,185 +30,117 @@
 html, body { height: 100%; margin: 0; }
 body { background: var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; }
 #app { position: relative; height: 100%; display: flex; background: var(--bg); }
-#panel { width: 310px; flex: none; background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto;
-  padding-block: 18px 24px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: 18px; display: flex; flex-direction: column; gap: 18px; }
 #stage { position: relative; flex: 1; min-width: 0; }
-canvas { display: block; width: 100%; height: 100%; }
-h1 { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.15; margin: 0; text-wrap: balance; }
-.sub { color: var(--muted); font-size: 13px; line-height: 1.45; margin: 4px 0 0; }
-.grp { display: flex; flex-direction: column; gap: 8px; }
-.grp > span { font-family: var(--display); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.seg { display: flex; flex-wrap: wrap; gap: 6px; }
-button { font: 500 13px var(--body); color: var(--ink); background: var(--chip); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; cursor: pointer; }
-button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-button:focus-visible, label:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
-.big { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-.big button { border: 0; border-radius: 0; padding: 11px 8px; font: 600 15px var(--display); }
-.cta { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.sw { width: 30px; height: 30px; padding: 0; position: relative; overflow: hidden; }
-.sw i { position: absolute; inset: 7px; border-radius: 2px; }
-.vids { display: flex; flex-direction: column; gap: 6px; }
-a.dl { display: block; font: 600 13px var(--body); color: var(--accent-ink); background: var(--accent); border-radius: 6px; padding: 9px 10px; text-decoration: none; }
-.thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-a.th { display: flex; flex-direction: column; gap: 3px; color: var(--ink); text-decoration: none; font-size: 12px; min-width: 0; }
-a.th img { width: 100%; height: auto; border-radius: 4px; border: 1px solid var(--line); display: block; }
-a.th:hover span { text-decoration: underline; }
-a.dl:focus-visible, a.th:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-label.chk { display: flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; }
-label.chk input { accent-color: var(--accent); width: 16px; height: 16px; }
-dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 5px 10px; font-size: 13px; }
-dt { color: var(--muted); } dd { margin: 0; font-family: var(--mono); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
-.note { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 0; }
-.warn { color: var(--ink); background: var(--chip); border-left: 3px solid #c98a2b; padding: 8px 10px; border-radius: 0 6px 6px 0; }
-kbd { font: 500 11px var(--mono); border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
+canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+button { font: 600 13px var(--body); color: var(--ink); background: transparent; border: 0; border-radius: 7px; padding: 8px 11px; cursor: pointer; white-space: nowrap; }
+button:hover { background: var(--chip); }
+button[aria-pressed="true"], button[aria-pressed="true"]:hover { background: var(--accent); color: var(--accent-ink); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.bar { position: absolute; display: flex; gap: 2px; align-items: center; background: var(--label-bg); color: var(--label-ink); border-radius: 11px; padding: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.2); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.sep { width: 1px; align-self: stretch; background: var(--line); margin: 5px 4px; }
+#tools { left: 50%; transform: translateX(-50%); bottom: max(14px, env(safe-area-inset-bottom, 0px)); flex-wrap: wrap; justify-content: center; width: max-content; max-width: calc(100% - 24px); }
+#acts { top: 12px; right: max(12px, env(safe-area-inset-right, 0px)); }
 #labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.dim { position: absolute; transform: translate(-50%, -50%); font: 500 11px var(--mono); background: var(--label-bg); color: var(--label-ink);
-  padding: 2px 5px; border-radius: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-#legend { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); bottom: 12px; display: flex; gap: 12px; align-items: flex-end;
-  font: 500 11px var(--mono); color: var(--label-ink); background: var(--label-bg); padding: 8px 10px; border-radius: 6px; }
-#north { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-#north svg { width: 18px; height: 26px; }
-#scalebar div { height: 6px; border: 1.5px solid var(--label-ink); border-top: 0; margin-top: 3px; }
-#credit { position: absolute; left: 10px; bottom: 8px; font: 400 10px var(--body); color: #fff; text-shadow: 0 1px 2px #000a; }
+.dim { position: absolute; left: 0; top: 0; font: 500 11px var(--mono); background: rgba(255,255,255,.93); color: #1d2620;
+  padding: 2px 5px; border-radius: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; will-change: transform; }
+.dim.edge { background: rgba(28,24,6,.78); color: #ffe36e; }
+#legend { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); top: 62px; display: flex; gap: 12px; align-items: center;
+  font: 500 11px var(--mono); color: var(--label-ink); background: var(--label-bg); padding: 7px 10px; border-radius: 8px; }
+#gridkey::before { content: ""; display: inline-block; width: 11px; height: 11px; border: 2px solid #e0b400; margin-right: 6px; vertical-align: -2px; }
+#north { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+#north svg { width: 14px; height: 20px; }
+#credit { position: absolute; left: 10px; top: 8px; font: 400 10px var(--body); color: #fff; text-shadow: 0 1px 2px #000a; }
 #loading { position: absolute; inset: 0; display: grid; place-items: center; font: 500 14px var(--body); color: var(--muted); }
-#stat { position: absolute; top: 14px; right: max(14px, env(safe-area-inset-right, 0px)); background: var(--cap-bg); color: var(--cap-ink); border-radius: 8px;
-  padding: 10px 14px; display: flex; gap: 10px; align-items: baseline; font-family: var(--display); pointer-events: none; }
-#stat b { font-size: 30px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
-#stat span { font-size: 13px; color: var(--cap-muted); line-height: 1.25; }
-/* present mode */
-#story { position: absolute; left: max(28px, env(safe-area-inset-left, 0px)); top: 26px; max-width: min(560px, calc(100% - 56px)); background: var(--cap-bg); color: var(--cap-ink);
-  border-radius: 10px; padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 6px; }
-#story small { font: 500 12px var(--mono); color: var(--cap-muted); letter-spacing: .04em; }
-#story h2 { margin: 0; font: 800 clamp(24px, 3.2vw, 40px)/1.08 var(--display); text-wrap: balance; }
-#story p { margin: 0; font-size: clamp(15px, 1.4vw, 19px); line-height: 1.4; color: var(--cap-muted); }
-#story h2, #story p { transition: opacity .35s; }
-#deck { position: absolute; left: 50%; transform: translateX(-50%); bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: flex; gap: 10px; align-items: center;
-  background: var(--cap-bg); border-radius: 999px; padding: 6px 8px; }
-#deck button { background: transparent; color: var(--cap-ink); border: 0; font: 600 14px var(--display); padding: 8px 14px; border-radius: 999px; }
-#deck button:hover { background: rgba(255,255,255,.12); }
-#dots { display: flex; gap: 7px; }
-#dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.3); }
-#dots i.on { background: var(--court); }
-body.present #panel { display: none; }
-body.clean #panel, body.clean #deck, body.clean #story, body.clean #stat { display: none !important; }
-#toggle { display: none; }
-@media (max-width: 760px) {
-  #app { flex-direction: column-reverse; }
-  #panel { width: auto; max-height: 48%; border-right: 0; border-top: 1px solid var(--line); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
-  #panel.min > :not(.head) { display: none; }
-  #toggle { display: inline-block; }
-  .head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-  #stat b { font-size: 22px; }
-  #story { left: 12px; top: 12px; max-width: calc(100% - 24px); padding: 12px 14px; }
+#pics { position: fixed; inset: 0; background: rgba(8,12,10,.62); display: grid; place-items: center; z-index: 5; padding: 16px; }
+#pics .sheet { background: var(--panel); color: var(--ink); border-radius: 12px; padding: 14px 16px 18px; width: min(820px, 100%); max-height: 100%; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
+#pics .sh { display: flex; justify-content: space-between; align-items: center; font: 700 17px var(--display); }
+#pics h3 { margin: 4px 0 0; font: 600 11px var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+a.th { display: flex; flex-direction: column; gap: 3px; color: var(--ink); text-decoration: none; font-size: 12px; min-width: 0; }
+a.th img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 5px; border: 1px solid var(--line); display: block; }
+a.th:hover span { text-decoration: underline; }
+.vids { display: flex; flex-wrap: wrap; gap: 8px; }
+a.dl { font: 600 13px var(--body); color: var(--accent-ink); background: var(--accent); border-radius: 7px; padding: 9px 12px; text-decoration: none; }
+body.clean .bar, body.clean #pics { display: none !important; }
+body.clean #legend { top: 12px; }
+@media (max-width: 640px) {
+  button { padding: 7px 8px; font-size: 12.5px; }
+  .sep { display: none; }
+  #tools { bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
 <div id="app">
-  <aside id="panel">
-    <div class="head">
-      <div>
-        <h1>Jericho pickleball courts, to scale</h1>
-        <p class="sub">The real south court pad at Jericho Beach Park, measured from an aerial photo and redrawn with 8 regulation courts.</p>
-      </div>
-      <div class="seg"><button id="toggle" aria-pressed="false">Hide</button></div>
-    </div>
-
-    <div class="grp">
-      <div class="big" id="mode">
-        <button data-m="today">Today</button>
-        <button data-m="proposed" aria-pressed="true">Proposed</button>
-      </div>
-      <div class="row2">
-        <button class="cta" id="present">Present</button>
-        <button id="save">Save image</button>
-      </div>
-    </div>
-
-    <div class="grp"><span>Download pictures and video</span>
-      <div class="vids">
-        <a class="dl" href="/3d/media/jericho-courts-flyover.mp4" download>Flyover video, 29 s</a>
-      </div>
-      <div class="thumbs">
-        <a class="th" href="/3d/media/jericho-courts-before-after.jpg" download><img src="/3d/media/thumb-before-after.jpg" alt="Before and after" loading="lazy" width="320" height="180"><span>Before and after</span></a>
-        <a class="th" href="/3d/media/jericho-courts-proposed-aerial.jpg" download><img src="/3d/media/thumb-proposed-aerial.jpg" alt="Proposed, aerial" loading="lazy" width="320" height="180"><span>Proposed, aerial</span></a>
-        <a class="th" href="/3d/media/jericho-courts-today-aerial.jpg" download><img src="/3d/media/thumb-today-aerial.jpg" alt="Today, aerial" loading="lazy" width="320" height="180"><span>Today, aerial</span></a>
-        <a class="th" href="/3d/media/jericho-courts-players.jpg" download><img src="/3d/media/thumb-players.jpg" alt="32 players" loading="lazy" width="320" height="180"><span>32 players</span></a>
-        <a class="th" href="/3d/media/jericho-courts-plan-measured.jpg" download><img src="/3d/media/thumb-plan-measured.jpg" alt="Measured plan" loading="lazy" width="320" height="180"><span>Measured plan</span></a>
-        <a class="th" href="/3d/media/jericho-courts-courtside.jpg" download><img src="/3d/media/thumb-courtside.jpg" alt="Courtside" loading="lazy" width="320" height="180"><span>Courtside</span></a>
-        <a class="th" href="/3d/media/jericho-courts-from-west.jpg" download><img src="/3d/media/thumb-from-west.jpg" alt="From the west" loading="lazy" width="320" height="180"><span>From the west</span></a>
-        <a class="th" href="/3d/media/jericho-courts-wide-context.jpg" download><img src="/3d/media/thumb-wide-context.jpg" alt="In the park" loading="lazy" width="320" height="180"><span>In the park</span></a>
-        <a class="th" href="/3d/media/jericho-courts-option-dusk-lights.jpg" download><img src="/3d/media/thumb-option-dusk-lights.jpg" alt="Option: lights at dusk" loading="lazy" width="320" height="180"><span>Option: lights at dusk</span></a>
-      </div>
-      <p class="note">Pictures are 1920 × 1080, rendered from this model. Free to use in slides and emails.</p>
-    </div>
-
-    <div class="grp"><span>View</span>
-      <div class="seg" id="views">
-        <button data-v="aerial" aria-pressed="true">Aerial</button>
-        <button data-v="aerial-west">From west</button>
-        <button data-v="plan">Plan</button>
-        <button data-v="court">Courtside</button>
-      </div>
-      <label class="chk"><input type="checkbox" id="spin"> Slowly circle the courts</label>
-    </div>
-
-    <div class="grp"><span>Fence between north and south courts</span>
-      <div class="seg" id="dividers">
-        <button data-d="none">None</button>
-        <button data-d="ft3">3 ft</button>
-        <button data-d="ft4" aria-pressed="true">4 ft</button>
-      </div>
-      <label class="chk"><input type="checkbox" id="screen" checked> Green windscreen on it</label>
-      <p class="note">One low, continuous fence between the two rows of baselines, open at each end to walk through. There isn't room for fences between side-by-side courts.</p>
-    </div>
-
-    <div class="grp"><span>Show</span>
-      <label class="chk"><input type="checkbox" id="players" checked> Players, to scale</label>
-      <label class="chk"><input type="checkbox" id="lights"> Light poles</label>
-      <label class="chk"><input type="checkbox" id="dusk"> Dusk</label>
-    </div>
-
-    <div class="grp"><span>Court colours</span>
-      <div class="seg" id="colours"></div>
-    </div>
-
-    <div class="grp"><span>Measurements</span>
-      <dl>
-        <dt>Pad, fence to fence</dt><dd>33.6 × 36.9 m</dd>
-        <dt>Court, outside lines</dt><dd>6.10 × 13.41 m</dd>
-        <dt></dt><dd>20 × 44 ft</dd>
-        <dt>Kitchen depth</dt><dd>2.13 m · 7 ft</dd>
-        <dt>Space per court</dt><dd>8.40 × 18.43 m</dd>
-        <dt>Between sidelines</dt><dd>2.30 m · 7.5 ft</dd>
-        <dt>Behind baselines</dt><dd>2.51 m · 8.2 ft</dd>
-        <dt>Net height</dt><dd>36 in · 34 in mid</dd>
-        <dt>Players at once</dt><dd>8 today · 32</dd>
-      </dl>
-      <p class="note warn">USA Pickleball suggests 30 × 60 ft (9.14 × 18.29 m) per court. This pad gives each of 8 courts 27.6 × 60.5 ft, so the length fits and the sides are 2.5 ft tight.</p>
-      <p class="note">Pad measured from a 10 cm aerial photo and checked against the existing tennis lines (23.77 × 10.97 m, read as 23.8 × 11.0 m). Good to about ±0.3 m. A concept sketch, not a construction drawing.</p>
-      <p class="note">In Present mode: <kbd>→</kbd> or a slide clicker moves on, <kbd>←</kbd> goes back, <kbd>Esc</kbd> exits.</p>
-    </div>
-  </aside>
   <main id="stage">
-    <div id="loading">Loading the aerial photo…</div>
-    <div id="labels"></div>
-    <div id="stat" aria-live="polite"><b id="statN">32</b><span id="statT">players at once<br>on 8 courts</span></div>
-    <div id="legend" hidden>
-      <div id="north"><svg viewBox="0 0 18 26" aria-hidden="true"><path d="M9 1 L16 22 L9 17 L2 22 Z" fill="currentColor"/></svg>N</div>
-      <div id="scalebar"><span>10 m</span><div></div></div>
-    </div>
-    <div id="story" hidden><small id="storyN"></small><h2 id="storyH"></h2><p id="storyP"></p></div>
-    <div id="deck" hidden>
-      <button id="prev" aria-label="Previous">‹ Back</button>
-      <div id="dots"></div>
-      <button id="next" aria-label="Next">Next ›</button>
-      <button id="exit">Exit</button>
-    </div>
+    <div id="loading">Loading…</div>
+    <div id="labels" hidden></div>
     <div id="credit">Aerial: Esri, Maxar, Earthstar Geographics</div>
+    <div id="legend" hidden>
+      <div id="north" hidden><svg viewBox="0 0 18 26" aria-hidden="true"><path d="M9 1 L16 22 L9 17 L2 22 Z" fill="currentColor"/></svg>N</div>
+      <span id="gridkey">1 m squares</span>
+    </div>
+    <div class="bar" id="acts">
+      <button id="link">Copy link</button>
+      <button id="save">Save</button>
+      <button id="picsBtn">Pictures</button>
+    </div>
+    <div class="bar" id="tools">
+      <button data-m="today">Today</button>
+      <button data-m="proposed">Proposed</button>
+      <span class="sep"></span>
+      <button data-v="aerial">Aerial</button>
+      <button data-v="aerial-west">West</button>
+      <button data-v="plan">Above</button>
+      <button data-v="court">Courtside</button>
+      <button data-v="wide">Park</button>
+      <span class="sep"></span>
+      <button data-t="grid">Grid</button>
+      <button data-u="m">m</button>
+      <button data-u="ft">ft</button>
+      <span class="sep"></span>
+      <button data-t="players">Players</button>
+      <button data-t="fence">Fence</button>
+      <button data-t="lights">Lights</button>
+      <button data-t="dusk">Dusk</button>
+      <button data-t="spin">Spin</button>
+    </div>
   </main>
+</div>
+<div id="pics" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="Pictures and video">
+    <div class="sh"><span>Pictures and video</span><button id="picsClose">Close</button></div>
+    <div class="vids">
+      <a class="dl" href="/3d/media/jericho-courts-flyover-grid.mp4" download>Video with grid</a>
+      <a class="dl" href="/3d/media/jericho-courts-flyover.mp4" download>Video</a>
+    </div>
+    <h3>With measurement grid</h3>
+    <div class="thumbs">
+      <a class="th" href="/3d/media/grid-aerial.jpg" download><img src="/3d/media/thumb-grid-aerial.jpg" alt="" loading="lazy" width="320" height="180"><span>Aerial</span></a>
+      <a class="th" href="/3d/media/grid-above.jpg" download><img src="/3d/media/thumb-grid-above.jpg" alt="" loading="lazy" width="320" height="180"><span>From above</span></a>
+      <a class="th" href="/3d/media/grid-west.jpg" download><img src="/3d/media/thumb-grid-west.jpg" alt="" loading="lazy" width="320" height="180"><span>From the west</span></a>
+      <a class="th" href="/3d/media/grid-south.jpg" download><img src="/3d/media/thumb-grid-south.jpg" alt="" loading="lazy" width="320" height="180"><span>From the south</span></a>
+      <a class="th" href="/3d/media/grid-courtside.jpg" download><img src="/3d/media/thumb-grid-courtside.jpg" alt="" loading="lazy" width="320" height="180"><span>Courtside</span></a>
+      <a class="th" href="/3d/media/grid-players.jpg" download><img src="/3d/media/thumb-grid-players.jpg" alt="" loading="lazy" width="320" height="180"><span>With players</span></a>
+      <a class="th" href="/3d/media/grid-today.jpg" download><img src="/3d/media/thumb-grid-today.jpg" alt="" loading="lazy" width="320" height="180"><span>Today</span></a>
+      <a class="th" href="/3d/media/grid-above-feet.jpg" download><img src="/3d/media/thumb-grid-above-feet.jpg" alt="" loading="lazy" width="320" height="180"><span>From above, feet</span></a>
+      <a class="th" href="/3d/media/grid-aerial-feet.jpg" download><img src="/3d/media/thumb-grid-aerial-feet.jpg" alt="" loading="lazy" width="320" height="180"><span>Aerial, feet</span></a>
+    </div>
+    <h3>Without grid</h3>
+    <div class="thumbs">
+      <a class="th" href="/3d/media/jericho-courts-before-after.jpg" download><img src="/3d/media/thumb-before-after.jpg" alt="" loading="lazy" width="320" height="180"><span>Before and after</span></a>
+      <a class="th" href="/3d/media/jericho-courts-proposed-aerial.jpg" download><img src="/3d/media/thumb-proposed-aerial.jpg" alt="" loading="lazy" width="320" height="180"><span>Proposed</span></a>
+      <a class="th" href="/3d/media/jericho-courts-today-aerial.jpg" download><img src="/3d/media/thumb-today-aerial.jpg" alt="" loading="lazy" width="320" height="180"><span>Today</span></a>
+      <a class="th" href="/3d/media/jericho-courts-players.jpg" download><img src="/3d/media/thumb-players.jpg" alt="" loading="lazy" width="320" height="180"><span>32 players</span></a>
+      <a class="th" href="/3d/media/jericho-courts-plan-measured.jpg" download><img src="/3d/media/thumb-plan-measured.jpg" alt="" loading="lazy" width="320" height="180"><span>Plan</span></a>
+      <a class="th" href="/3d/media/jericho-courts-courtside.jpg" download><img src="/3d/media/thumb-courtside.jpg" alt="" loading="lazy" width="320" height="180"><span>Courtside</span></a>
+      <a class="th" href="/3d/media/jericho-courts-from-west.jpg" download><img src="/3d/media/thumb-from-west.jpg" alt="" loading="lazy" width="320" height="180"><span>From the west</span></a>
+      <a class="th" href="/3d/media/jericho-courts-wide-context.jpg" download><img src="/3d/media/thumb-wide-context.jpg" alt="" loading="lazy" width="320" height="180"><span>In the park</span></a>
+      <a class="th" href="/3d/media/jericho-courts-option-dusk-lights.jpg" download><img src="/3d/media/thumb-option-dusk-lights.jpg" alt="" loading="lazy" width="320" height="180"><span>Lights at dusk</span></a>
+    </div>
+  </div>
 </div>
 
 <script type="importmap">
@@ -243,7 +175,7 @@ const PALETTES = [
   { id: 'slate', name: 'Blue on grey', surround: '#6b7470', court: '#2f5f9c', kitchen: '#2f5f9c' },
 ];
 
-const state = { view: 'aerial', mode: 'proposed', dividers: 'ft4', screen: true, palette: 'classic', players: true, lights: false, dusk: false, spin: false };
+const state = { view: 'aerial', mode: 'proposed', dividers: 'ft4', screen: true, palette: 'classic', players: true, lights: false, dusk: false, spin: false, grid: false, units: 'm' };
 
 // ---------- renderer / scene ----------
 const stage = document.getElementById('stage');
@@ -538,29 +470,87 @@ const headMat = new THREE.MeshStandardMaterial({ color: '#222', emissive: '#fff6
 const northFence = new THREE.Group(); scene.add(northFence);
 fenceRect(northFence, NORTH_PAD.cx - NORTH_PAD.w / 2, -PAD_L / 2 - NORTH_PAD.l, NORTH_PAD.cx + NORTH_PAD.w / 2, -PAD_L / 2 - .02, FENCE_H);
 
-// ---------- plan-view dimension lines ----------
-const dimGroup = new THREE.Group(); scene.add(dimGroup);
-const dimMat = new THREE.LineBasicMaterial({ color: '#ffffff' });
+// ---------- measurements (Grid button): ground grid, rulers, dimension lines and labels ----------
+const dimGroup = new THREE.Group(); dimGroup.visible = false; scene.add(dimGroup);
+const courtDims = new THREE.Group(); dimGroup.add(courtDims);
+const dimMat = new THREE.LineBasicMaterial({ color: '#ffffff', depthTest: false, transparent: true });
 const labelsEl = document.getElementById('labels');
 const dimLabels = [];
-function dimLine(a, b, text, offset = [0, 0]) {
-  const y = 4;
+function label(text, at, o = {}) {
+  const el = document.createElement('div'); el.className = 'dim' + (o.cls ? ' ' + o.cls : ''); el.textContent = text; el.style.display = 'none'; labelsEl.appendChild(el);
+  const d = { el, text, at, prio: o.prio ?? 1, court: !!o.court, off: false, vis: false, x: 0, y: 0 }; dimLabels.push(d); return d;
+}
+function dimLine(a, b, text, offset = [0, 0], court = false) {
+  const y = .1;
   const dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz), nx = -dz / L * .5, nz = dx / L * .5;
   const v = (x, z) => new THREE.Vector3(x, y, z);
   const geo = new THREE.BufferGeometry().setFromPoints([v(a[0], a[1]), v(b[0], b[1]), v(a[0] - nx, a[1] - nz), v(a[0] + nx, a[1] + nz), v(b[0] - nx, b[1] - nz), v(b[0] + nx, b[1] + nz)]);
-  dimGroup.add(new THREE.LineSegments(geo, dimMat));
-  const el = document.createElement('div'); el.className = 'dim'; el.textContent = text; labelsEl.appendChild(el);
-  dimLabels.push({ el, text, at: new THREE.Vector3((a[0] + b[0]) / 2 + offset[0], y, (a[1] + b[1]) / 2 + offset[1]) });
+  const ln = new THREE.LineSegments(geo, dimMat); ln.renderOrder = 6; (court ? courtDims : dimGroup).add(ln);
+  label(text, new THREE.Vector3((a[0] + b[0]) / 2 + offset[0], y, (a[1] + b[1]) / 2 + offset[1]), { prio: 0, court });
 }
 {
   const c = courts[4];
   dimLine([-PAD_W / 2, PAD_L / 2 + 1.6], [PAD_W / 2, PAD_L / 2 + 1.6], '33.6 m · 110 ft', [0, 1.1]);
-  dimLine([-PAD_W / 2 - 1.6, -PAD_L / 2], [-PAD_W / 2 - 1.6, PAD_L / 2], '36.9 m · 121 ft', [-3.4, 0]);
-  dimLine([c.x - CW / 2, c.z + CL / 2 + .9], [c.x + CW / 2, c.z + CL / 2 + .9], '20 ft', [0, .8]);
-  dimLine([c.x + CW / 2 + .5, c.z - CL / 2], [c.x + CW / 2 + .5, c.z + CL / 2], '44 ft', [1.3, 3]);
-  dimLine([c.x + CW / 2, c.z - 3], [courts[5].x - CW / 2, c.z - 3], '2.30 m', [0, -.8]);
-  dimLine([courts[5].x + 1.2, courts[5].z + CL / 2], [courts[5].x + 1.2, PAD_L / 2], '2.51 m', [1.6, 0]);
-  dimLine([courts[6].x + 1.2, courts[6].z - KITCHEN], [courts[6].x + 1.2, courts[6].z], '7 ft', [1.2, 0]);
+  dimLine([PAD_W / 2 + 1.6, -PAD_L / 2], [PAD_W / 2 + 1.6, PAD_L / 2], '36.9 m · 121 ft', [3.4, 0]);
+  dimLine([c.x - CW / 2, c.z + CL / 2 + .9], [c.x + CW / 2, c.z + CL / 2 + .9], '20 ft', [0, .8], true);
+  dimLine([c.x + CW / 2 + .5, c.z - CL / 2], [c.x + CW / 2 + .5, c.z + CL / 2], '44 ft', [1.3, 3], true);
+  dimLine([c.x + CW / 2, c.z - 3], [courts[5].x - CW / 2, c.z - 3], '2.30 m', [0, -.8], true);
+  dimLine([courts[5].x + 1.2, courts[5].z + CL / 2], [courts[5].x + 1.2, PAD_L / 2], '2.51 m', [1.6, 0], true);
+  dimLine([courts[6].x + 1.2, courts[6].z - KITCHEN], [courts[6].x + 1.2, courts[6].z], '7 ft', [1.2, 0], true);
+}
+const fenceLbl = label('4 ft fence', new THREE.Vector3(PAD_W / 4, LOW_H + .35, 0), { prio: 0, court: true });
+label('10 ft fence', new THREE.Vector3(-PAD_W / 2, FENCE_H + .4, PAD_L / 4), { prio: 1 });
+
+// the grid is drawn to a canvas texture so its lines thin out naturally with distance
+const gridCanvas = document.createElement('canvas'); gridCanvas.width = gridCanvas.height = 2048;
+const gridTex = new THREE.CanvasTexture(gridCanvas); gridTex.anisotropy = maxAniso; gridTex.colorSpace = THREE.SRGBColorSpace;
+const gridMat = new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, toneMapped: false });
+const gridMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), gridMat);
+gridMesh.rotation.x = -Math.PI / 2; gridMesh.position.y = TOP + .025; gridMesh.renderOrder = 4; gridMesh.visible = false; scene.add(gridMesh);
+const rulerLabels = [];
+let gridUnits = null;
+function buildGrid() {
+  if (gridUnits === state.units) return;
+  gridUnits = state.units;
+  const ft = state.units === 'ft';
+  // metres: 1 m squares, bold every 5 m. feet: 2 ft squares, bold every 10 ft. Lines start at the pad's north-west corner.
+  const step = ft ? 2 * FT : 1, major = 5, start = ft ? -10 : -5, n = ft ? 80 : 50;
+  const size = n * step, x0 = -PAD_W / 2 + start * step, z0 = -PAD_L / 2 + start * step;
+  gridMesh.scale.set(size, size, 1); gridMesh.position.x = x0 + size / 2; gridMesh.position.z = z0 + size / 2;
+  const g = gridCanvas.getContext('2d'), W = gridCanvas.width, P = W / n;
+  g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, W, W);
+  const lines = (big) => { g.beginPath(); for (let i = 0; i <= n; i++) { if ((((i + start) % major) + major) % major === 0 !== big) continue; const p = Math.round(i * P) + .5; g.moveTo(p, 0); g.lineTo(p, W); g.moveTo(0, p); g.lineTo(W, p); } g.stroke(); };
+  g.strokeStyle = 'rgba(255,226,110,.5)'; g.lineWidth = 1.75; lines(false);
+  g.strokeStyle = 'rgba(0,0,0,.22)'; g.lineWidth = 5; lines(true);
+  g.strokeStyle = 'rgba(255,227,110,.95)'; g.lineWidth = 3.5; lines(true);
+  g.globalCompositeOperation = 'destination-in';
+  for (const horiz of [true, false]) {
+    const gr = horiz ? g.createLinearGradient(0, 0, W, 0) : g.createLinearGradient(0, 0, 0, W), f = 2.5 / n;
+    gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(f, '#000'); gr.addColorStop(1 - f, '#000'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, W, W);
+  }
+  g.globalCompositeOperation = 'source-over';
+  gridTex.needsUpdate = true;
+  // rulers along the north and west edges, counting from the north-west corner
+  for (const r of rulerLabels) { r.el.remove(); dimLabels.splice(dimLabels.indexOf(r), 1); }
+  rulerLabels.length = 0;
+  const every = ft ? 20 : 5, u = ft ? FT : 1, unit = ft ? ' ft' : ' m';
+  for (let v = 0; v * u <= PAD_W + .01; v += every) rulerLabels.push(label(v ? v + unit : '0', new THREE.Vector3(-PAD_W / 2 + v * u, TOP, -PAD_L / 2 - 2.3), { cls: 'edge', prio: 2 }));
+  for (let v = every; v * u <= PAD_L + .01; v += every) rulerLabels.push(label(v + unit, new THREE.Vector3(-PAD_W / 2 - 2.6, TOP, -PAD_L / 2 + v * u), { cls: 'edge', prio: 2 }));
+  document.getElementById('gridkey').textContent = ft ? '2 ft squares' : '1 m squares';
+}
+function placeLabels() {
+  const w = stage.clientWidth, h = stage.clientHeight, placed = [];
+  for (const d of dimLabels) if (d.off) { d.el.style.display = 'none'; d.vis = false; }
+  for (const d of dimLabels.filter((d) => !d.off).sort((a, b) => a.prio - b.prio)) {
+    tmp.copy(d.at).project(camera);
+    const x = (tmp.x + 1) / 2 * w, y = (1 - tmp.y) / 2 * h, bw = d.text.length * 6.7 + 12, bh = 18;
+    const r = [x - bw / 2 - 3, y - bh / 2 - 2, x + bw / 2 + 3, y + bh / 2 + 2];
+    const hide = tmp.z > 1 || x < -30 || x > w + 30 || y < -12 || y > h + 12 || placed.some((q) => r[0] < q[2] && r[2] > q[0] && r[1] < q[3] && r[3] > q[1]);
+    d.vis = !hide; d.x = x; d.y = y; d.w = bw;
+    d.el.style.display = hide ? 'none' : '';
+    if (!hide) { placed.push(r); d.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -50%)`; }
+  }
 }
 
 // ---------- cameras, views and smooth moves ----------
@@ -568,7 +558,7 @@ const persp = new THREE.PerspectiveCamera(38, 1, .1, 1500);
 const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, .1, 500);
 let camera = persp;
 const controls = new OrbitControls(persp, renderer.domElement);
-controls.enableDamping = true; controls.maxPolarAngle = Math.PI / 2.05; controls.minDistance = 3; controls.maxDistance = 260;
+controls.enableDamping = true; controls.dampingFactor = .25; controls.maxPolarAngle = Math.PI / 2.05; controls.minDistance = 3; controls.maxDistance = 260;
 controls.autoRotateSpeed = .45;
 const VIEWS = {
   aerial: { pos: [34, 40, 50], target: [-1, 0, -6], fov: 38 },
@@ -579,28 +569,29 @@ const VIEWS = {
 };
 let move = null; // { from, to, t }
 const ease = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+let camDirty = false; // the camera was dragged away from the preset view: put it in the link
 function setView(v, animate = true) {
-  state.view = v;
-  document.querySelectorAll('#views button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+  state.view = v; camDirty = false;
   const plan = v === 'plan';
-  dimGroup.visible = plan; labelsEl.hidden = !plan; document.getElementById('legend').hidden = !plan;
-  if (plan) { camera = ortho; controls.enabled = false; move = null; ortho.position.set(0, 120, 0); ortho.up.set(0, 0, -1); ortho.lookAt(0, 0, 0); }
+  document.getElementById('north').hidden = !plan;
+  if (plan) { camera = ortho; controls.enabled = false; move = null; ortho.position.set(0, 120, 2.5); ortho.up.set(0, 0, -1); ortho.lookAt(0, 0, 2.5); }
   else {
     const s = VIEWS[v];
     const wasPlan = camera === ortho; camera = persp; controls.enabled = true;
-    if (animate && !wasPlan && !reduced) move = { p0: persp.position.clone(), t0: controls.target.clone(), f0: persp.fov, p1: new THREE.Vector3(...s.pos), t1: new THREE.Vector3(...s.target), f1: s.fov, t: 0 };
-    else { move = null; persp.position.set(...s.pos); controls.target.set(...s.target); persp.fov = s.fov; persp.updateProjectionMatrix(); }
+    if (animate && !wasPlan && !reduced) move = { p0: persp.position.clone(), t0: controls.target.clone(), f0: persp.fov, p1: new THREE.Vector3(...s.pos), t1: new THREE.Vector3(...s.target), f1: fit(s.fov), t: 0 };
+    else { move = null; persp.position.set(...s.pos); controls.target.set(...s.target); persp.fov = fit(s.fov); persp.updateProjectionMatrix(); }
   }
-  controls.autoRotate = false;
+  controls.autoRotate = state.spin && !plan;
   resize();
-  if (['aerial', 'aerial-west', 'plan', 'court'].includes(v) && location.hash.slice(1) !== v) history.replaceState(null, '', '#' + v);
+  syncButtons(); writeURL();
 }
+function fit(f) { const a = stage.clientWidth / Math.max(1, stage.clientHeight); return a >= 1.3 ? f : Math.min(100, 2 * Math.atan(Math.tan(f * Math.PI / 360) * 1.3 / a) * 180 / Math.PI); }
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function resize() {
   const w = stage.clientWidth, h = stage.clientHeight;
   renderer.setSize(w, h, false);
   persp.aspect = w / h; persp.updateProjectionMatrix();
-  const needW = PAD_W + 16, needH = PAD_L + 12;
+  const needW = PAD_W + 16, needH = PAD_L + 19;
   const half = Math.max(needH / 2, needW / 2 * h / w);
   ortho.top = half; ortho.bottom = -half; ortho.left = -half * w / h; ortho.right = half * w / h; ortho.updateProjectionMatrix();
   const sb = document.querySelector('#scalebar div'); if (sb) sb.style.width = (10 / ((2 * half * w / h) / w)) + 'px';
@@ -614,7 +605,7 @@ function apply() {
   proposal.visible = !today || reveal < 1;
   playersProposed.visible = state.players && !today; playersToday.visible = state.players && today;
   lightsGroup.visible = state.lights;
-  buildDividers(); drawPad();
+  buildDividers(); drawPad(); buildGrid();
   const dusk = state.dusk;
   scene.background.copy(dusk ? SKY_DUSK : SKY_DAY); scene.fog.color.copy(scene.background);
   hemi.intensity = dusk ? .3 : 1.25; sun.intensity = dusk ? .1 : 2.1;
@@ -622,13 +613,21 @@ function apply() {
   const on = dusk && state.lights;
   headMat.emissiveIntensity = on ? 3 : 0; spots.forEach((s) => (s.intensity = on ? 70 : 0));
   controls.autoRotate = state.spin && camera === persp;
-  document.getElementById('spin').checked = state.spin;
-  for (const id of ['players', 'lights', 'dusk', 'screen']) document.getElementById(id).checked = state[id];
-  document.querySelectorAll('#mode button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === state.mode)));
-  document.querySelectorAll('#dividers button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === state.dividers)));
-  document.querySelectorAll('#colours button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === state.palette)));
-  document.getElementById('statN').textContent = today ? '8' : '32';
-  document.getElementById('statT').innerHTML = today ? 'players at once<br>on 2 tennis courts' : 'players at once<br>on 8 pickleball courts';
+  // measurements
+  gridMesh.visible = dimGroup.visible = state.grid; labelsEl.hidden = !state.grid; courtDims.visible = !today;
+  document.getElementById('legend').hidden = !state.grid;
+  const low = state.dividers === 'ft3' ? 3 * FT : LOW_H;
+  fenceLbl.text = fenceLbl.el.textContent = state.dividers === 'ft3' ? '3 ft fence' : '4 ft fence'; fenceLbl.at.y = low + .35;
+  for (const d of dimLabels) d.off = d.court && today;
+  fenceLbl.off = today || state.dividers === 'none';
+  syncButtons(); writeURL();
+}
+function syncButtons() {
+  const pressed = { grid: state.grid, players: state.players, fence: state.dividers !== 'none', lights: state.lights, dusk: state.dusk, spin: state.spin };
+  document.querySelectorAll('[data-m]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.m === state.mode)));
+  document.querySelectorAll('[data-v]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === state.view)));
+  document.querySelectorAll('[data-t]').forEach((b) => b.setAttribute('aria-pressed', String(!!pressed[b.dataset.t])));
+  document.querySelectorAll('[data-u]').forEach((b) => { b.hidden = !state.grid; b.setAttribute('aria-pressed', String(b.dataset.u === state.units)); });
 }
 function setMode(m) {
   if (m === state.mode) return;
@@ -648,94 +647,91 @@ function stepReveal(dt) {
   if (reveal >= 1) { topMat.opacity = sideMat.opacity = 1; nets.scale.y = dividers.scale.y = 1; apply(); }
 }
 
-// ---------- present mode: a short story for a meeting ----------
-const STEPS = [
-  { title: 'Jericho Beach Park today', text: 'The south court pad: two tennis courts inside the existing fence.', state: { mode: 'today', view: 'aerial', players: true, dusk: false, lights: false } },
-  { title: 'Same pad, eight courts', text: 'Eight regulation pickleball courts fit inside the fence that is already there. New surface, nets and posts.', state: { mode: 'proposed', view: 'aerial', players: false, dusk: false, lights: false } },
-  { title: 'Drawn to true size', text: 'Measured from aerial imagery: a 33.6 × 36.9 m pad and 20 × 44 ft courts with 7 ft kitchens.', state: { mode: 'proposed', view: 'plan', players: false } },
-  { title: 'Four times the players', text: 'From 8 players at once on two tennis courts to 32 on eight pickleball courts.', state: { mode: 'proposed', view: 'close', players: true } },
-  { title: 'A low fence between the rows', text: 'One continuous 4 ft fence between the north and south courts stops stray balls rolling into the next game.', state: { mode: 'proposed', view: 'court', players: true } },
-  { title: 'A destination court for the west side', text: 'Eight courts beside the beach, the trail and the sailing centre.', state: { mode: 'proposed', view: 'wide', players: true }, spin: true },
-];
-let step = -1;
-const storyEl = document.getElementById('story'), deckEl = document.getElementById('deck');
-const dotsEl = document.getElementById('dots');
-STEPS.forEach(() => dotsEl.appendChild(document.createElement('i')));
-function showStep(i) {
-  step = Math.max(0, Math.min(STEPS.length - 1, i));
-  const s = STEPS[step];
-  const { mode, view, ...rest } = s.state;
-  Object.assign(state, rest, { spin: false });
-  if (mode) setMode(mode);
-  apply();
-  setView(view);
-  if (s.spin) setTimeout(() => { if (step === STEPS.indexOf(s)) { state.spin = true; apply(); } }, 1600);
-  document.getElementById('storyN').textContent = `${step + 1} / ${STEPS.length}`;
-  document.getElementById('storyH').textContent = s.title;
-  document.getElementById('storyP').textContent = s.text;
-  [...dotsEl.children].forEach((d, j) => d.classList.toggle('on', j === step));
-  document.getElementById('next').textContent = step === STEPS.length - 1 ? 'Start over' : 'Next ›';
+// ---------- every setting lives in the link ----------
+// ?mode=today|proposed &view=aerial|west|above|courtside|park|close &grid=1 &units=m|ft &fence=0|3|4 &screen=0
+// &players=0 &lights=1 &dusk=1 &spin=1 &colour=classic|twotone|teal|slate &cam=x,y,z,tx,ty,tz,fov &ui=0 (no buttons)
+const DEF = { mode: 'proposed', screen: true, players: true, lights: false, dusk: false, spin: false };
+const VIEW_ALIAS = { west: 'aerial-west', above: 'plan', top: 'plan', courtside: 'court', park: 'wide', players: 'close' };
+const VIEW_NAME = { 'aerial-west': 'west', plan: 'above', court: 'courtside', wide: 'park' };
+let customCam = null;
+function readURL() {
+  const q = new URLSearchParams(location.search);
+  const b = (k, d) => (q.has(k) ? !['0', 'false', 'no', 'off'].includes(q.get(k).toLowerCase()) : d);
+  let v = (q.get('view') || location.hash.slice(1) || 'aerial').toLowerCase(); v = VIEW_ALIAS[v] || v;
+  state.view = v in VIEWS || v === 'plan' ? v : 'aerial';
+  state.mode = q.get('mode') === 'today' ? 'today' : 'proposed';
+  state.grid = b('grid', false); state.units = (q.get('units') || '').toLowerCase().startsWith('f') ? 'ft' : 'm';
+  const f = (q.get('fence') || '4').toLowerCase(); state.dividers = ['0', 'none', 'off', 'no', 'false'].includes(f) ? 'none' : f.startsWith('3') ? 'ft3' : 'ft4';
+  for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) state[k] = b(k, DEF[k]);
+  const c = q.get('colour') || q.get('color'); if (PALETTES.some((p) => p.id === c)) state.palette = c;
+  const cam = (q.get('cam') || '').split(',').map(Number); customCam = cam.length === 7 && cam.every(Number.isFinite) ? cam : null;
+  if (q.get('ui') === '0') document.body.classList.add('clean');
 }
-function present(on) {
-  document.body.classList.toggle('present', on);
-  storyEl.hidden = deckEl.hidden = !on;
-  if (on) { document.documentElement.requestFullscreen?.().catch(() => {}); showStep(0); }
-  else { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); step = -1; state.spin = false; apply(); }
-  setTimeout(resize, 50);
+function writeURL() {
+  const q = new URLSearchParams();
+  if (state.mode !== DEF.mode) q.set('mode', state.mode);
+  if (state.view !== 'aerial') q.set('view', VIEW_NAME[state.view] || state.view);
+  if (state.grid) q.set('grid', '1');
+  if (state.units === 'ft') q.set('units', 'ft');
+  if (state.dividers !== 'ft4') q.set('fence', state.dividers === 'none' ? '0' : '3');
+  for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) if (state[k] !== DEF[k]) q.set(k, state[k] ? '1' : '0');
+  if (state.palette !== 'classic') q.set('colour', state.palette);
+  if (camDirty && camera === persp && !state.spin) q.set('cam', [...persp.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(1)).concat(Math.round(persp.fov)).join(','));
+  if (document.body.classList.contains('clean')) q.set('ui', '0');
+  const s = q.toString().replace(/%2C/g, ','), url = location.pathname + (s ? '?' + s : '');
+  if (url !== location.pathname + location.search || location.hash) history.replaceState(null, '', url);
 }
-document.getElementById('present').onclick = () => present(true);
-document.getElementById('exit').onclick = () => present(false);
-document.getElementById('next').onclick = () => showStep(step === STEPS.length - 1 ? 0 : step + 1);
-document.getElementById('prev').onclick = () => showStep(step - 1);
-window.addEventListener('keydown', (e) => {
-  if (!document.body.classList.contains('present')) return;
-  if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); showStep(step === STEPS.length - 1 ? 0 : step + 1); }
-  else if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); showStep(step - 1); }
-  else if (e.key === 'Escape') present(false);
-});
-document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('present')) setTimeout(resize, 50); });
 
-// ---------- save a picture (2× resolution, with plan labels) ----------
+// ---------- save a picture (2× resolution, with the measurement labels) ----------
 document.getElementById('save').onclick = () => {
   const w = stage.clientWidth, h = stage.clientHeight, pr = renderer.getPixelRatio(), k = 2;
   renderer.setPixelRatio(k); renderer.setSize(w, h, false); renderer.render(scene, camera);
   const out = document.createElement('canvas'); out.width = w * k; out.height = h * k;
   const g = out.getContext('2d'); g.drawImage(renderer.domElement, 0, 0);
-  if (state.view === 'plan') {
+  if (state.grid) {
     g.font = `500 ${11 * k}px "IBM Plex Mono", monospace`; g.textAlign = 'center'; g.textBaseline = 'middle';
     for (const d of dimLabels) {
-      tmp.copy(d.at).project(ortho); const x = (tmp.x + 1) / 2 * w * k, y = (1 - tmp.y) / 2 * h * k, tw = g.measureText(d.text).width + 10 * k;
-      g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(x - tw / 2, y - 9 * k, tw, 18 * k); g.fillStyle = '#1d2620'; g.fillText(d.text, x, y);
+      if (!d.vis) continue;
+      const x = d.x * k, y = d.y * k, tw = g.measureText(d.text).width + 10 * k, edge = d.el.classList.contains('edge');
+      g.fillStyle = edge ? 'rgba(28,24,6,.78)' : 'rgba(255,255,255,.93)'; g.fillRect(x - tw / 2, y - 9 * k, tw, 18 * k);
+      g.fillStyle = edge ? '#ffe36e' : '#1d2620'; g.fillText(d.text, x, y);
     }
   }
-  g.font = `400 ${10 * k}px "Public Sans", sans-serif`; g.textAlign = 'left'; g.fillStyle = '#fff'; g.shadowColor = '#000a'; g.shadowBlur = 3 * k;
+  g.font = `400 ${10 * k}px "Public Sans", sans-serif`; g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.fillStyle = '#fff'; g.shadowColor = '#000a'; g.shadowBlur = 3 * k;
   g.fillText('Aerial: Esri, Maxar, Earthstar Geographics · concept drawn to scale', 10 * k, h * k - 10 * k);
   renderer.setPixelRatio(pr); renderer.setSize(w, h, false);
   out.toBlob((blob) => {
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `jericho-courts-${state.mode}-${state.view}.png`; document.body.appendChild(a); a.click();
+    a.download = `jericho-courts-${state.mode}-${VIEW_NAME[state.view] || state.view}${state.grid ? '-grid' : ''}.png`; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   }, 'image/png');
 };
 
-// ---------- panel controls ----------
-const coloursEl = document.getElementById('colours');
-for (const p of PALETTES) {
-  const b = document.createElement('button'); b.className = 'sw'; b.dataset.p = p.id; b.title = p.name; b.setAttribute('aria-label', p.name);
-  b.style.background = p.surround; b.innerHTML = `<i style="background:linear-gradient(${p.court} 0 35%, ${p.kitchen} 35% 65%, ${p.court} 65%)"></i>`;
-  b.onclick = () => { state.palette = p.id; apply(); };
-  coloursEl.appendChild(b);
-}
-document.querySelectorAll('#mode button').forEach((b) => (b.onclick = () => setMode(b.dataset.m)));
-document.querySelectorAll('#views button').forEach((b) => (b.onclick = () => setView(b.dataset.v)));
-document.querySelectorAll('#dividers button').forEach((b) => (b.onclick = () => { state.dividers = b.dataset.d; apply(); }));
-for (const id of ['players', 'lights', 'dusk', 'spin', 'screen']) document.getElementById(id).onchange = (e) => { state[id] = e.target.checked; apply(); };
-document.getElementById('toggle').onclick = (e) => { const p = document.getElementById('panel'); const m = p.classList.toggle('min'); e.target.textContent = m ? 'Options' : 'Hide'; setTimeout(resize, 0); };
-window.addEventListener('hashchange', () => { const v = location.hash.slice(1); if (v in VIEWS || v === 'plan') setView(v); });
-controls.addEventListener('start', () => { move = null; if (state.spin && !document.body.classList.contains('present')) return; });
+// ---------- buttons ----------
+document.getElementById('link').onclick = async (e) => {
+  const b = e.currentTarget; writeURL();
+  try { await navigator.clipboard.writeText(location.href); b.textContent = 'Copied'; } catch { b.textContent = 'Copy the address bar'; }
+  setTimeout(() => (b.textContent = 'Copy link'), 1800);
+};
+const pics = document.getElementById('pics');
+document.getElementById('picsBtn').onclick = () => { pics.hidden = false; document.getElementById('picsClose').focus(); };
+document.getElementById('picsClose').onclick = () => (pics.hidden = true);
+pics.addEventListener('click', (e) => { if (e.target === pics) pics.hidden = true; });
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape') pics.hidden = true; });
+document.querySelectorAll('[data-m]').forEach((b) => (b.onclick = () => setMode(b.dataset.m)));
+document.querySelectorAll('[data-v]').forEach((b) => (b.onclick = () => setView(b.dataset.v)));
+document.querySelectorAll('[data-u]').forEach((b) => (b.onclick = () => { state.units = b.dataset.u; apply(); }));
+document.querySelectorAll('[data-t]').forEach((b) => (b.onclick = () => {
+  const t = b.dataset.t;
+  if (t === 'fence') state.dividers = state.dividers === 'none' ? 'ft4' : 'none'; else state[t] = !state[t];
+  apply();
+}));
+window.addEventListener('hashchange', () => { const v = VIEW_ALIAS[location.hash.slice(1)] || location.hash.slice(1); if (v in VIEWS || v === 'plan') setView(v); });
+let camTimer = 0;
+controls.addEventListener('start', () => { move = null; });
+controls.addEventListener('end', () => { clearTimeout(camTimer); camTimer = setTimeout(() => { camDirty = true; writeURL(); }, 800); });
 // for still renders from a script
 window.__set = (o) => { const { mode, view, ...rest } = o; Object.assign(state, rest); if (mode) { state.mode = mode; reveal = 1; } apply(); if (view) setView(view, false); };
-window.__present = (i) => { present(true); showStep(i); move = null; const v = VIEWS[STEPS[i].state.view]; if (v) { persp.position.set(...v.pos); controls.target.set(...v.target); persp.fov = v.fov; persp.updateProjectionMatrix(); } reveal = 1; stepReveal(0); apply(); };
 
 // ---------- loop ----------
 const tmp = new THREE.Vector3();
@@ -752,21 +748,22 @@ function frame() {
   stepReveal(dt);
   controls.update();
   renderer.render(scene, camera);
-  if (state.view === 'plan') {
-    const w = stage.clientWidth, h = stage.clientHeight;
-    for (const d of dimLabels) { tmp.copy(d.at).project(ortho); d.el.style.left = ((tmp.x + 1) / 2 * w) + 'px'; d.el.style.top = ((1 - tmp.y) / 2 * h) + 'px'; }
-    document.querySelector('#north svg').style.transform = `rotate(${-ROT}rad)`;
-  }
+  if (state.grid) placeLabels();
+  if (state.view === 'plan') document.querySelector('#north svg').style.transform = `rotate(${-ROT}rad)`;
   requestAnimationFrame(frame);
 }
 // hooks for rendering stills and video frame by frame from a script
-window.__api = { paused: false, persp, controls, state, apply, setMode, setView, canvas: renderer.domElement, VIEWS,
+window.__api = { paused: false, persp, controls, state, apply, setMode, setView, canvas: renderer.domElement, VIEWS, labels: placeLabels,
   setReveal(r) { reveal = r; if (r >= 1) { topMat.opacity = sideMat.opacity = 1; nets.scale.y = dividers.scale.y = 1; apply(); } else stepReveal(0); },
   cam(pos, target, fov) { camera = persp; persp.position.set(...pos); controls.target.set(...target); persp.lookAt(...target); if (fov) persp.fov = fov; persp.updateProjectionMatrix(); },
   render() { renderer.render(scene, camera); } };
+readURL();
 apply();
-const start = location.hash.slice(1);
-setView(start in VIEWS || start === 'plan' ? start : 'aerial', false);
+setView(state.view, false);
+if (customCam && state.view !== 'plan') {
+  persp.position.set(customCam[0], customCam[1], customCam[2]); controls.target.set(customCam[3], customCam[4], customCam[5]);
+  persp.fov = customCam[6]; persp.updateProjectionMatrix(); camDirty = true; writeURL();
+}
 document.fonts?.ready.then(drawPad);
 frame();
 </script>
