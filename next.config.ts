@@ -11,7 +11,11 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: projectRoot,
   // /3d is a static three.js page in public/3d (to-scale court concept).
   async rewrites() {
-    return [{ source: "/3d", destination: "/3d/index.html" }];
+    return [
+      { source: "/3d", destination: "/3d/index.html" },
+      // VPA drawing set: 8 permanent courts proposal (PDF)
+      { source: "/plan", destination: "/plans/jericho-permanent-courts-proposal-plan.pdf" },
+    ];
   },
 };
 
