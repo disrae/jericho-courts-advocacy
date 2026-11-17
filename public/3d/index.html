@@ -469,7 +469,7 @@ const headMat = new THREE.MeshStandardMaterial({ color: '#222', emissive: '#fff6
 const northFence = new THREE.Group(); scene.add(northFence);
 fenceRect(northFence, NORTH_PAD.cx - NORTH_PAD.w / 2, -PAD_L / 2 - NORTH_PAD.l, NORTH_PAD.cx + NORTH_PAD.w / 2, -PAD_L / 2 - .02, FENCE_H);
 
-// ---------- measurements (Grid button): guide lines from every court edge, dimension chains, overall sizes ----------
+// ---------- measurements (Grid button): court outlines with their size, and the size of the whole pad ----------
 const dimGroup = new THREE.Group(); dimGroup.visible = false; scene.add(dimGroup);
 const courtDims = new THREE.Group(); dimGroup.add(courtDims);
 const dimMat = new THREE.LineBasicMaterial({ color: '#ffffff', depthTest: false, transparent: true });
@@ -498,15 +498,10 @@ const xs = [-PAD_W / 2], zs = [-PAD_L / 2];
 for (let c = 0; c < COLS; c++) xs.push(courts[c].x - CW / 2, courts[c].x + CW / 2);
 for (let r = 0; r < ROWS; r++) zs.push(courts[r * COLS].z - CL / 2, courts[r * COLS].z + CL / 2);
 xs.push(PAD_W / 2); zs.push(PAD_L / 2);
-chain('x', xs, PAD_L / 2 + 1.7, { court: true });                    // across: edge, court, gap, court ... (south side)
-chain('z', zs, -PAD_W / 2 - 1.7, { court: true });                   // down: behind baseline, court, between rows ... (west side)
-{ const c = courts[6], x = c.x + CW / 2 + (BAY_W - CW) / 2; chain('z', [c.z - KITCHEN, c.z], x, { court: true, prio: 1, pre: 'kitchen ' }); }
+const courtLbls = courts.map((c) => label('', new THREE.Vector3(c.x, TOP, c.z + CL / 4), { court: true }));
 // the whole place
 chain('x', [-PAD_W / 2, PAD_W / 2], PAD_L / 2 + 4.6, { both: true, cls: 'total' });
 chain('z', [-PAD_L / 2, PAD_L / 2], PAD_W / 2 + 2.2, { both: true, cls: 'total' });
-chain('z', [-PAD_L / 2 - NORTH_PAD.l, PAD_L / 2], PAD_W / 2 + 6.2, { both: true, cls: 'total', prio: 1, pre: 'both pads ' });
-const fenceLbl = label('4 ft fence', new THREE.Vector3(PAD_W / 4, LOW_H + .35, 0), { prio: 1, court: true });
-label('10 ft fence', new THREE.Vector3(-PAD_W / 2, FENCE_H + .4, PAD_L / 4), { prio: 1 });
 let gridUnits = null;
 function buildGrid() {
   if (gridUnits === state.units) return;
@@ -515,8 +510,9 @@ function buildGrid() {
     const ft = ftOf(c.len) + ' ft', m = mOf(c.len) + ' m';
     c.d.text = c.d.el.textContent = c.pre + (c.both ? (state.units === 'm' ? `${m} · ${ft}` : `${ft} · ${m}`) : state.units === 'm' ? m : ft);
   }
+  for (const d of courtLbls) d.text = d.el.textContent = state.units === 'm' ? '6.1 × 13.4 m' : '20 × 44 ft';
 }
-// guide lines: every court sideline and baseline carried across the pad (dashed yellow), left off inside the courts
+// court outlines, drawn to a texture on the ground
 const GM = 3, GW = PAD_W + 2 * GM, GH = PAD_L + 2 * GM;
 const gridCanvas = document.createElement('canvas'); gridCanvas.width = 2048; gridCanvas.height = Math.round(2048 * GH / GW);
 const gridTex = new THREE.CanvasTexture(gridCanvas); gridTex.anisotropy = maxAniso; gridTex.colorSpace = THREE.SRGBColorSpace;
@@ -526,17 +522,9 @@ gridMesh.rotation.x = -Math.PI / 2; gridMesh.position.y = TOP + .025; gridMesh.r
 {
   const g = gridCanvas.getContext('2d'), W = gridCanvas.width, H = gridCanvas.height, k = W / GW;
   const X = (x) => (x + GW / 2) * k, Z = (z) => (z + GH / 2) * k;
-  g.setLineDash([.45 * k, .25 * k]); g.lineCap = 'butt';
-  const draw = (w, style) => {
-    g.strokeStyle = style; g.lineWidth = w * k; g.beginPath();
-    for (const x of xs) { g.moveTo(X(x), 0); g.lineTo(X(x), H); }
-    for (const z of zs) { g.moveTo(0, Z(z)); g.lineTo(W, Z(z)); }
-    g.stroke();
-  };
-  draw(.14, 'rgba(0,0,0,.25)'); draw(.08, '#ffe36e');
-  g.setLineDash([]);
-  g.globalCompositeOperation = 'destination-out'; g.fillStyle = '#000';
-  for (const c of courts) g.fillRect(X(c.x - CW / 2 + .06), Z(c.z - CL / 2 + .06), (CW - .12) * k, (CL - .12) * k);
+  // a bright outline just outside each court's own white lines
+  const outline = (w, style) => { g.strokeStyle = style; g.lineWidth = w * k; for (const c of courts) { const o = .12; g.strokeRect(X(c.x - CW / 2 - o), Z(c.z - CL / 2 - o), (CW + 2 * o) * k, (CL + 2 * o) * k); } };
+  outline(.2, 'rgba(0,0,0,.3)'); outline(.12, '#ffe36e');
   g.globalCompositeOperation = 'destination-in';
   for (const horiz of [true, false]) {
     const gr = horiz ? g.createLinearGradient(0, 0, W, 0) : g.createLinearGradient(0, 0, 0, H), f = (GM - .3) / (horiz ? GW : GH);
@@ -625,10 +613,7 @@ function apply() {
   controls.autoRotate = state.spin && camera === persp;
   // measurements
   dimGroup.visible = state.grid; gridMesh.visible = state.grid && !today; labelsEl.hidden = !state.grid; courtDims.visible = !today;
-  const low = state.dividers === 'ft3' ? 3 * FT : LOW_H;
-  fenceLbl.text = fenceLbl.el.textContent = state.dividers === 'ft3' ? '3 ft fence' : '4 ft fence'; fenceLbl.at.y = low + .35;
   for (const d of dimLabels) d.off = d.court && today;
-  fenceLbl.off = today || state.dividers === 'none';
   syncButtons(); writeURL();
 }
 function syncButtons() {
