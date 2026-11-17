@@ -103,6 +103,7 @@ body.clean #legend { top: 12px; }
     </div>
     <div class="bar" id="tools">
       <button data-t="grid">Grid</button>
+      <span class="units"><button data-u="m">m</button><button data-u="ft">ft</button></span>
       <button data-t="players">Players</button>
       <button data-t="lights">Lights</button>
     </div>
@@ -124,8 +125,8 @@ body.clean #legend { top: 12px; }
       <a class="th" href="/3d/media/grid-courtside.jpg" download><img src="/3d/media/thumb-grid-courtside.jpg" alt="" loading="lazy" width="320" height="180"><span>Courtside</span></a>
       <a class="th" href="/3d/media/grid-players.jpg" download><img src="/3d/media/thumb-grid-players.jpg" alt="" loading="lazy" width="320" height="180"><span>With players</span></a>
       <a class="th" href="/3d/media/grid-today.jpg" download><img src="/3d/media/thumb-grid-today.jpg" alt="" loading="lazy" width="320" height="180"><span>Today</span></a>
-      <a class="th" href="/3d/media/grid-above-metres.jpg" download><img src="/3d/media/thumb-grid-above-metres.jpg" alt="" loading="lazy" width="320" height="180"><span>From above, metres</span></a>
-      <a class="th" href="/3d/media/grid-aerial-metres.jpg" download><img src="/3d/media/thumb-grid-aerial-metres.jpg" alt="" loading="lazy" width="320" height="180"><span>Aerial, metres</span></a>
+      <a class="th" href="/3d/media/grid-above-feet.jpg" download><img src="/3d/media/thumb-grid-above-feet.jpg" alt="" loading="lazy" width="320" height="180"><span>From above, feet</span></a>
+      <a class="th" href="/3d/media/grid-aerial-feet.jpg" download><img src="/3d/media/thumb-grid-aerial-feet.jpg" alt="" loading="lazy" width="320" height="180"><span>Aerial, feet</span></a>
     </div>
     <h3>Without grid</h3>
     <div class="thumbs">
@@ -174,7 +175,7 @@ const PALETTES = [
   { id: 'slate', name: 'Blue on grey', surround: '#6b7470', court: '#2f5f9c', kitchen: '#2f5f9c' },
 ];
 
-const state = { view: 'aerial', mode: 'proposed', dividers: 'ft4', screen: true, palette: 'classic', players: true, lights: false, dusk: false, spin: false, grid: false, units: 'ft' };
+const state = { view: 'aerial', mode: 'proposed', dividers: 'ft4', screen: true, palette: 'classic', players: true, lights: false, dusk: false, spin: false, grid: false, units: 'm' };
 
 // ---------- renderer / scene ----------
 const stage = document.getElementById('stage');
@@ -498,19 +499,23 @@ const xs = [-PAD_W / 2], zs = [-PAD_L / 2];
 for (let c = 0; c < COLS; c++) xs.push(courts[c].x - CW / 2, courts[c].x + CW / 2);
 for (let r = 0; r < ROWS; r++) zs.push(courts[r * COLS].z - CL / 2, courts[r * COLS].z + CL / 2);
 xs.push(PAD_W / 2); zs.push(PAD_L / 2);
-const courtLbls = courts.map((c) => label('', new THREE.Vector3(c.x, TOP, c.z + (c.z > 0 ? 1 : -1) * (CL / 2 + (BAY_L - CL) / 4)), { court: true }));
+// each chunk: its width near the outer fence, its length just inside its west edge
+const chunkW = courts.map((c) => label('', new THREE.Vector3(c.x, TOP, c.z > 0 ? PAD_L / 2 - 1 : -PAD_L / 2 + 1), { court: true }));
+const chunkL = courts.map((c) => label('', new THREE.Vector3(c.x - BAY_W / 2 + 1, TOP, c.z), { court: true }));
 // the whole place
-chain('x', [-PAD_W / 2, PAD_W / 2], PAD_L / 2 + 4.6, { both: true, cls: 'total' });
-chain('z', [-PAD_L / 2, PAD_L / 2], PAD_W / 2 + 2.2, { both: true, cls: 'total' });
+chain('x', [-PAD_W / 2, PAD_W / 2], PAD_L / 2 + 2.6, { cls: 'total' });
+chain('z', [-PAD_L / 2, PAD_L / 2], PAD_W / 2 + 2.6, { cls: 'total' });
 let gridUnits = null;
 function buildGrid() {
   if (gridUnits === state.units) return;
   gridUnits = state.units;
   for (const c of chains) {
-    const ft = ftOf(c.len) + ' ft', m = mOf(c.len) + ' m';
+    const ft = Math.round(c.len / FT) + ' ft', m = c.len.toFixed(1) + ' m';
     c.d.text = c.d.el.textContent = c.pre + (c.both ? (state.units === 'm' ? `${m} · ${ft}` : `${ft} · ${m}`) : state.units === 'm' ? m : ft);
   }
-  for (const d of courtLbls) d.text = d.el.textContent = state.units === 'm' ? `${BAY_W.toFixed(1)} × ${BAY_L.toFixed(1)} m` : `${(BAY_W / FT).toFixed(1)} × ${(BAY_L / FT).toFixed(1)} ft`;
+  const len = (m) => (state.units === 'm' ? m.toFixed(2) + ' m' : (m / FT).toFixed(1) + ' ft');
+  for (const d of chunkW) d.text = d.el.textContent = len(BAY_W);
+  for (const d of chunkL) d.text = d.el.textContent = len(BAY_L);
 }
 // the boxes, drawn to a texture on the ground
 const GM = 3, GW = PAD_W + 2 * GM, GH = PAD_L + 2 * GM;
@@ -523,7 +528,12 @@ gridMesh.rotation.x = -Math.PI / 2; gridMesh.position.y = TOP + .025; gridMesh.r
   const g = gridCanvas.getContext('2d'), W = gridCanvas.width, H = gridCanvas.height, k = W / GW;
   const X = (x) => (x + GW / 2) * k, Z = (z) => (z + GH / 2) * k;
   // each court's equal share of the pad: 4 across, 2 down, boxes drawn just inside their edges so neighbours read as separate
-  const outline = (w, style) => { g.strokeStyle = style; g.lineWidth = w * k; for (const c of courts) { const o = .2; g.strokeRect(X(c.x - BAY_W / 2 + o), Z(c.z - BAY_L / 2 + o), (BAY_W - 2 * o) * k, (BAY_L - 2 * o) * k); } };
+  const outline = (w, style) => {
+    g.strokeStyle = style; g.lineWidth = w * k; g.beginPath();
+    for (let i = 0; i <= COLS; i++) { const x = X(-PAD_W / 2 + i * BAY_W); g.moveTo(x, Z(-PAD_L / 2)); g.lineTo(x, Z(PAD_L / 2)); }
+    for (let j = 0; j <= ROWS; j++) { const z = Z(-PAD_L / 2 + j * BAY_L); g.moveTo(X(-PAD_W / 2), z); g.lineTo(X(PAD_W / 2), z); }
+    g.stroke();
+  };
   outline(.2, 'rgba(0,0,0,.3)'); outline(.12, '#ffe36e');
   g.globalCompositeOperation = 'destination-in';
   for (const horiz of [true, false]) {
@@ -654,7 +664,7 @@ function readURL() {
   let v = (q.get('view') || location.hash.slice(1) || 'aerial').toLowerCase(); v = VIEW_ALIAS[v] || v;
   state.view = v in VIEWS || v === 'plan' ? v : 'aerial';
   state.mode = q.get('mode') === 'today' ? 'today' : 'proposed';
-  state.grid = b('grid', false); state.units = (q.get('units') || '').toLowerCase().startsWith('m') ? 'm' : 'ft';
+  state.grid = b('grid', false); state.units = /^(f|i)/.test((q.get('units') || '').toLowerCase()) ? 'ft' : 'm';
   const f = (q.get('fence') || '4').toLowerCase(); state.dividers = ['0', 'none', 'off', 'no', 'false'].includes(f) ? 'none' : f.startsWith('3') ? 'ft3' : 'ft4';
   for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) state[k] = b(k, DEF[k]);
   if (!q.has('dusk')) state.dusk = state.lights;
@@ -667,7 +677,7 @@ function writeURL() {
   if (state.mode !== DEF.mode) q.set('mode', state.mode);
   if (state.view !== 'aerial') q.set('view', VIEW_NAME[state.view] || state.view);
   if (state.grid) q.set('grid', '1');
-  if (state.units === 'm') q.set('units', 'm');
+  if (state.units === 'ft') q.set('units', 'ft');
   if (state.dividers !== 'ft4') q.set('fence', state.dividers === 'none' ? '0' : '3');
   for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) if (state[k] !== DEF[k] && !(k === 'dusk' && state.dusk === state.lights)) q.set(k, state[k] ? '1' : '0');
   if (state.palette !== 'classic') q.set('colour', state.palette);
