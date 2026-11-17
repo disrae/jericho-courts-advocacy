@@ -62,6 +62,22 @@ a.th img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; b
 a.th:hover span { text-decoration: underline; }
 .vids { display: flex; flex-wrap: wrap; gap: 8px; }
 a.dl { font: 600 13px var(--body); color: var(--accent-ink); background: var(--accent); border-radius: 7px; padding: 9px 12px; text-decoration: none; }
+/* side bar on wide screens: buttons stacked, on/off items drawn as switches */
+@media (min-width: 761px) {
+  #tools { left: max(12px, env(safe-area-inset-left, 0px)); top: 50%; bottom: auto; transform: translateY(-50%); flex-direction: column; flex-wrap: nowrap; align-items: stretch; width: 132px; max-height: calc(100% - 24px); overflow-y: auto; }
+  #tools button { text-align: left; }
+  #tools .sep { width: auto; height: 1px; margin: 4px 6px; }
+  #tools [data-u] { display: inline-block; }
+  .units { display: flex; gap: 2px; }
+  .units button { flex: 1; text-align: center !important; }
+}
+.units { display: contents; }
+@media (min-width: 761px) { .units { display: flex; } }
+[data-t] { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+[data-t]::after { content: ""; flex: none; width: 26px; height: 15px; border-radius: 99px; background: radial-gradient(circle at 7.5px 50%, #fff 5px, transparent 5.6px), #9aa79d; transition: background .15s; }
+[data-t][aria-pressed="true"], [data-t][aria-pressed="true"]:hover { background: transparent; color: var(--label-ink); }
+[data-t][aria-pressed="true"]::after { background: radial-gradient(circle at 18.5px 50%, #fff 5px, transparent 5.6px), var(--accent); }
+@media (max-width: 760px) { [data-t]::after { width: 20px; height: 12px; background: radial-gradient(circle at 6px 50%, #fff 4px, transparent 4.6px), #9aa79d; } [data-t][aria-pressed="true"]::after { background: radial-gradient(circle at 14px 50%, #fff 4px, transparent 4.6px), var(--accent); } }
 body.clean .bar, body.clean #pics { display: none !important; }
 body.clean #legend { top: 12px; }
 @media (max-width: 640px) {
@@ -98,8 +114,7 @@ body.clean #legend { top: 12px; }
       <button data-v="wide">Park</button>
       <span class="sep"></span>
       <button data-t="grid">Grid</button>
-      <button data-u="m">m</button>
-      <button data-u="ft">ft</button>
+      <span class="units"><button data-u="m">m</button><button data-u="ft">ft</button></span>
       <span class="sep"></span>
       <button data-t="players">Players</button>
       <button data-t="fence">Fence</button>
