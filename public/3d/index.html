@@ -44,10 +44,9 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outlin
 #labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .dim { position: absolute; left: 0; top: 0; font: 500 11px var(--mono); background: rgba(255,255,255,.93); color: #1d2620;
   padding: 2px 5px; border-radius: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; will-change: transform; }
-.dim.edge { background: rgba(28,24,6,.78); color: #ffe36e; }
 #legend { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); top: 62px; display: flex; gap: 12px; align-items: center;
   font: 500 11px var(--mono); color: var(--label-ink); background: var(--label-bg); padding: 7px 10px; border-radius: 8px; }
-#gridkey::before { content: ""; display: inline-block; width: 11px; height: 11px; border: 2px solid #e0b400; margin-right: 6px; vertical-align: -2px; }
+.dim.total { background: #1d2620; color: #fff; font-weight: 600; }
 #north { display: flex; flex-direction: column; align-items: center; gap: 1px; }
 #north svg { width: 14px; height: 20px; }
 #credit { position: absolute; left: 10px; top: 8px; font: 400 10px var(--body); color: #fff; text-shadow: 0 1px 2px #000a; }
@@ -95,8 +94,7 @@ body.clean #legend { top: 12px; }
     <div id="labels" hidden></div>
     <div id="credit">Aerial: Esri, Maxar, Earthstar Geographics</div>
     <div id="legend" hidden>
-      <div id="north" hidden><svg viewBox="0 0 18 26" aria-hidden="true"><path d="M9 1 L16 22 L9 17 L2 22 Z" fill="currentColor"/></svg>N</div>
-      <span id="gridkey">1 m squares</span>
+      <div id="north"><svg viewBox="0 0 18 26" aria-hidden="true"><path d="M9 1 L16 22 L9 17 L2 22 Z" fill="currentColor"/></svg>N</div>
     </div>
     <div class="bar" id="acts">
       <button id="link">Copy link</button>
@@ -126,8 +124,8 @@ body.clean #legend { top: 12px; }
       <a class="th" href="/3d/media/grid-courtside.jpg" download><img src="/3d/media/thumb-grid-courtside.jpg" alt="" loading="lazy" width="320" height="180"><span>Courtside</span></a>
       <a class="th" href="/3d/media/grid-players.jpg" download><img src="/3d/media/thumb-grid-players.jpg" alt="" loading="lazy" width="320" height="180"><span>With players</span></a>
       <a class="th" href="/3d/media/grid-today.jpg" download><img src="/3d/media/thumb-grid-today.jpg" alt="" loading="lazy" width="320" height="180"><span>Today</span></a>
-      <a class="th" href="/3d/media/grid-above-feet.jpg" download><img src="/3d/media/thumb-grid-above-feet.jpg" alt="" loading="lazy" width="320" height="180"><span>From above, feet</span></a>
-      <a class="th" href="/3d/media/grid-aerial-feet.jpg" download><img src="/3d/media/thumb-grid-aerial-feet.jpg" alt="" loading="lazy" width="320" height="180"><span>Aerial, feet</span></a>
+      <a class="th" href="/3d/media/grid-above-metres.jpg" download><img src="/3d/media/thumb-grid-above-metres.jpg" alt="" loading="lazy" width="320" height="180"><span>From above, metres</span></a>
+      <a class="th" href="/3d/media/grid-aerial-metres.jpg" download><img src="/3d/media/thumb-grid-aerial-metres.jpg" alt="" loading="lazy" width="320" height="180"><span>Aerial, metres</span></a>
     </div>
     <h3>Without grid</h3>
     <div class="thumbs">
@@ -176,7 +174,7 @@ const PALETTES = [
   { id: 'slate', name: 'Blue on grey', surround: '#6b7470', court: '#2f5f9c', kitchen: '#2f5f9c' },
 ];
 
-const state = { view: 'aerial', mode: 'proposed', dividers: 'ft4', screen: true, palette: 'classic', players: true, lights: false, dusk: false, spin: false, grid: false, units: 'm' };
+const state = { view: 'aerial', mode: 'proposed', dividers: 'ft4', screen: true, palette: 'classic', players: true, lights: false, dusk: false, spin: false, grid: false, units: 'ft' };
 
 // ---------- renderer / scene ----------
 const stage = document.getElementById('stage');
@@ -471,7 +469,7 @@ const headMat = new THREE.MeshStandardMaterial({ color: '#222', emissive: '#fff6
 const northFence = new THREE.Group(); scene.add(northFence);
 fenceRect(northFence, NORTH_PAD.cx - NORTH_PAD.w / 2, -PAD_L / 2 - NORTH_PAD.l, NORTH_PAD.cx + NORTH_PAD.w / 2, -PAD_L / 2 - .02, FENCE_H);
 
-// ---------- measurements (Grid button): ground grid, rulers, dimension lines and labels ----------
+// ---------- measurements (Grid button): guide lines from every court edge, dimension chains, overall sizes ----------
 const dimGroup = new THREE.Group(); dimGroup.visible = false; scene.add(dimGroup);
 const courtDims = new THREE.Group(); dimGroup.add(courtDims);
 const dimMat = new THREE.LineBasicMaterial({ color: '#ffffff', depthTest: false, transparent: true });
@@ -481,64 +479,72 @@ function label(text, at, o = {}) {
   const el = document.createElement('div'); el.className = 'dim' + (o.cls ? ' ' + o.cls : ''); el.textContent = text; el.style.display = 'none'; labelsEl.appendChild(el);
   const d = { el, text, at, prio: o.prio ?? 1, court: !!o.court, off: false, vis: false, x: 0, y: 0 }; dimLabels.push(d); return d;
 }
-function dimLine(a, b, text, offset = [0, 0], court = false) {
-  const y = .1;
-  const dx = b[0] - a[0], dz = b[1] - a[1], L = Math.hypot(dx, dz), nx = -dz / L * .5, nz = dx / L * .5;
-  const v = (x, z) => new THREE.Vector3(x, y, z);
-  const geo = new THREE.BufferGeometry().setFromPoints([v(a[0], a[1]), v(b[0], b[1]), v(a[0] - nx, a[1] - nz), v(a[0] + nx, a[1] + nz), v(b[0] - nx, b[1] - nz), v(b[0] + nx, b[1] + nz)]);
-  const ln = new THREE.LineSegments(geo, dimMat); ln.renderOrder = 6; (court ? courtDims : dimGroup).add(ln);
-  label(text, new THREE.Vector3((a[0] + b[0]) / 2 + offset[0], y, (a[1] + b[1]) / 2 + offset[1]), { prio: 0, court });
+const ftOf = (m) => { const f = m / FT; return f > 60 || Math.abs(f - Math.round(f)) < .06 ? String(Math.round(f)) : f.toFixed(1); };
+const mOf = (m) => (m >= 10 ? m.toFixed(1) : m.toFixed(2));
+const chains = [];
+// a run of dimensions along x (at a given z) or along z (at a given x), with a tick at every boundary and a label per piece
+function chain(axis, coords, at, o = {}) {
+  const y = .1, P = (u) => (axis === 'x' ? new THREE.Vector3(u, y, at) : new THREE.Vector3(at, y, u));
+  const pts = [P(coords[0]), P(coords[coords.length - 1])];
+  for (const u of coords) { const a = P(u), b = a.clone(); if (axis === 'x') { a.z -= .45; b.z += .45; } else { a.x -= .45; b.x += .45; } pts.push(a, b); }
+  const ln = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), dimMat); ln.renderOrder = 6;
+  (o.court ? courtDims : dimGroup).add(ln);
+  for (let i = 0; i < coords.length - 1; i++) {
+    const len = coords[i + 1] - coords[i];
+    chains.push({ d: label('', P((coords[i] + coords[i + 1]) / 2), { prio: o.prio ?? 0, court: o.court, cls: o.cls }), len, both: o.both, pre: o.pre || '' });
+  }
 }
-{
-  const c = courts[4];
-  dimLine([-PAD_W / 2, PAD_L / 2 + 1.6], [PAD_W / 2, PAD_L / 2 + 1.6], '33.6 m · 110 ft', [0, 1.1]);
-  dimLine([PAD_W / 2 + 1.6, -PAD_L / 2], [PAD_W / 2 + 1.6, PAD_L / 2], '36.9 m · 121 ft', [3.4, 0]);
-  dimLine([c.x - CW / 2, c.z + CL / 2 + .9], [c.x + CW / 2, c.z + CL / 2 + .9], '20 ft', [0, .8], true);
-  dimLine([c.x + CW / 2 + .5, c.z - CL / 2], [c.x + CW / 2 + .5, c.z + CL / 2], '44 ft', [1.3, 3], true);
-  dimLine([c.x + CW / 2, c.z - 3], [courts[5].x - CW / 2, c.z - 3], '2.30 m', [0, -.8], true);
-  dimLine([courts[5].x + 1.2, courts[5].z + CL / 2], [courts[5].x + 1.2, PAD_L / 2], '2.51 m', [1.6, 0], true);
-  dimLine([courts[6].x + 1.2, courts[6].z - KITCHEN], [courts[6].x + 1.2, courts[6].z], '7 ft', [1.2, 0], true);
-}
-const fenceLbl = label('4 ft fence', new THREE.Vector3(PAD_W / 4, LOW_H + .35, 0), { prio: 0, court: true });
+const xs = [-PAD_W / 2], zs = [-PAD_L / 2];
+for (let c = 0; c < COLS; c++) xs.push(courts[c].x - CW / 2, courts[c].x + CW / 2);
+for (let r = 0; r < ROWS; r++) zs.push(courts[r * COLS].z - CL / 2, courts[r * COLS].z + CL / 2);
+xs.push(PAD_W / 2); zs.push(PAD_L / 2);
+chain('x', xs, PAD_L / 2 + 1.7, { court: true });                    // across: edge, court, gap, court ... (south side)
+chain('z', zs, -PAD_W / 2 - 1.7, { court: true });                   // down: behind baseline, court, between rows ... (west side)
+{ const c = courts[6], x = c.x + CW / 2 + (BAY_W - CW) / 2; chain('z', [c.z - KITCHEN, c.z], x, { court: true, prio: 1, pre: 'kitchen ' }); }
+// the whole place
+chain('x', [-PAD_W / 2, PAD_W / 2], PAD_L / 2 + 4.6, { both: true, cls: 'total' });
+chain('z', [-PAD_L / 2, PAD_L / 2], PAD_W / 2 + 2.2, { both: true, cls: 'total' });
+chain('z', [-PAD_L / 2 - NORTH_PAD.l, PAD_L / 2], PAD_W / 2 + 6.2, { both: true, cls: 'total', prio: 1, pre: 'both pads ' });
+const fenceLbl = label('4 ft fence', new THREE.Vector3(PAD_W / 4, LOW_H + .35, 0), { prio: 1, court: true });
 label('10 ft fence', new THREE.Vector3(-PAD_W / 2, FENCE_H + .4, PAD_L / 4), { prio: 1 });
-
-// the grid is drawn to a canvas texture so its lines thin out naturally with distance
-const gridCanvas = document.createElement('canvas'); gridCanvas.width = gridCanvas.height = 2048;
-const gridTex = new THREE.CanvasTexture(gridCanvas); gridTex.anisotropy = maxAniso; gridTex.colorSpace = THREE.SRGBColorSpace;
-const gridMat = new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, toneMapped: false });
-const gridMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), gridMat);
-gridMesh.rotation.x = -Math.PI / 2; gridMesh.position.y = TOP + .025; gridMesh.renderOrder = 4; gridMesh.visible = false; scene.add(gridMesh);
-const rulerLabels = [];
 let gridUnits = null;
 function buildGrid() {
   if (gridUnits === state.units) return;
   gridUnits = state.units;
-  const ft = state.units === 'ft';
-  // metres: 1 m squares, bold every 5 m. feet: 2 ft squares, bold every 10 ft. Lines start at the pad's north-west corner.
-  const step = ft ? 2 * FT : 1, major = 5, start = ft ? -10 : -5, n = ft ? 80 : 50;
-  const size = n * step, x0 = -PAD_W / 2 + start * step, z0 = -PAD_L / 2 + start * step;
-  gridMesh.scale.set(size, size, 1); gridMesh.position.x = x0 + size / 2; gridMesh.position.z = z0 + size / 2;
-  const g = gridCanvas.getContext('2d'), W = gridCanvas.width, P = W / n;
-  g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, W, W);
-  const lines = (big) => { g.beginPath(); for (let i = 0; i <= n; i++) { if ((((i + start) % major) + major) % major === 0 !== big) continue; const p = Math.round(i * P) + .5; g.moveTo(p, 0); g.lineTo(p, W); g.moveTo(0, p); g.lineTo(W, p); } g.stroke(); };
-  g.strokeStyle = 'rgba(255,226,110,.5)'; g.lineWidth = 1.75; lines(false);
-  g.strokeStyle = 'rgba(0,0,0,.22)'; g.lineWidth = 5; lines(true);
-  g.strokeStyle = 'rgba(255,227,110,.95)'; g.lineWidth = 3.5; lines(true);
+  for (const c of chains) {
+    const ft = ftOf(c.len) + ' ft', m = mOf(c.len) + ' m';
+    c.d.text = c.d.el.textContent = c.pre + (c.both ? (state.units === 'm' ? `${m} · ${ft}` : `${ft} · ${m}`) : state.units === 'm' ? m : ft);
+  }
+}
+// guide lines: every court sideline and baseline carried across the pad (dashed yellow), left off inside the courts
+const GM = 3, GW = PAD_W + 2 * GM, GH = PAD_L + 2 * GM;
+const gridCanvas = document.createElement('canvas'); gridCanvas.width = 2048; gridCanvas.height = Math.round(2048 * GH / GW);
+const gridTex = new THREE.CanvasTexture(gridCanvas); gridTex.anisotropy = maxAniso; gridTex.colorSpace = THREE.SRGBColorSpace;
+const gridMat = new THREE.MeshBasicMaterial({ map: gridTex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, toneMapped: false });
+const gridMesh = new THREE.Mesh(new THREE.PlaneGeometry(GW, GH), gridMat);
+gridMesh.rotation.x = -Math.PI / 2; gridMesh.position.y = TOP + .025; gridMesh.renderOrder = 4; gridMesh.visible = false; scene.add(gridMesh);
+{
+  const g = gridCanvas.getContext('2d'), W = gridCanvas.width, H = gridCanvas.height, k = W / GW;
+  const X = (x) => (x + GW / 2) * k, Z = (z) => (z + GH / 2) * k;
+  g.setLineDash([.45 * k, .25 * k]); g.lineCap = 'butt';
+  const draw = (w, style) => {
+    g.strokeStyle = style; g.lineWidth = w * k; g.beginPath();
+    for (const x of xs) { g.moveTo(X(x), 0); g.lineTo(X(x), H); }
+    for (const z of zs) { g.moveTo(0, Z(z)); g.lineTo(W, Z(z)); }
+    g.stroke();
+  };
+  draw(.14, 'rgba(0,0,0,.25)'); draw(.08, '#ffe36e');
+  g.setLineDash([]);
+  g.globalCompositeOperation = 'destination-out'; g.fillStyle = '#000';
+  for (const c of courts) g.fillRect(X(c.x - CW / 2 + .06), Z(c.z - CL / 2 + .06), (CW - .12) * k, (CL - .12) * k);
   g.globalCompositeOperation = 'destination-in';
   for (const horiz of [true, false]) {
-    const gr = horiz ? g.createLinearGradient(0, 0, W, 0) : g.createLinearGradient(0, 0, 0, W), f = 2.5 / n;
+    const gr = horiz ? g.createLinearGradient(0, 0, W, 0) : g.createLinearGradient(0, 0, 0, H), f = (GM - .3) / (horiz ? GW : GH);
     gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(f, '#000'); gr.addColorStop(1 - f, '#000'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-    g.fillStyle = gr; g.fillRect(0, 0, W, W);
+    g.fillStyle = gr; g.fillRect(0, 0, W, H);
   }
   g.globalCompositeOperation = 'source-over';
   gridTex.needsUpdate = true;
-  // rulers along the north and west edges, counting from the north-west corner
-  for (const r of rulerLabels) { r.el.remove(); dimLabels.splice(dimLabels.indexOf(r), 1); }
-  rulerLabels.length = 0;
-  const every = ft ? 20 : 5, u = ft ? FT : 1, unit = ft ? ' ft' : ' m';
-  for (let v = 0; v * u <= PAD_W + .01; v += every) rulerLabels.push(label(v ? v + unit : '0', new THREE.Vector3(-PAD_W / 2 + v * u, TOP, -PAD_L / 2 - 2.3), { cls: 'edge', prio: 2 }));
-  for (let v = every; v * u <= PAD_L + .01; v += every) rulerLabels.push(label(v + unit, new THREE.Vector3(-PAD_W / 2 - 2.6, TOP, -PAD_L / 2 + v * u), { cls: 'edge', prio: 2 }));
-  document.getElementById('gridkey').textContent = ft ? '2 ft squares' : '1 m squares';
 }
 function placeLabels() {
   const w = stage.clientWidth, h = stage.clientHeight, placed = [];
@@ -559,7 +565,10 @@ const persp = new THREE.PerspectiveCamera(38, 1, .1, 1500);
 const ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, .1, 500);
 let camera = persp;
 const controls = new OrbitControls(persp, renderer.domElement);
-controls.enableDamping = true; controls.dampingFactor = .25; controls.maxPolarAngle = Math.PI / 2.05; controls.minDistance = 3; controls.maxDistance = 260;
+controls.enableDamping = true; controls.dampingFactor = .25; controls.rotateSpeed = .45; controls.zoomSpeed = .7; controls.panSpeed = .7;
+// mouse drags turn the view gently; a finger on a phone needs a little more
+renderer.domElement.addEventListener('pointerdown', (e) => { controls.rotateSpeed = e.pointerType === 'mouse' ? .45 : .8; }, { capture: true });
+ controls.maxPolarAngle = Math.PI / 2.05; controls.minDistance = 3; controls.maxDistance = 260;
 controls.autoRotateSpeed = .45;
 const VIEWS = {
   aerial: { pos: [34, 40, 50], target: [-1, 0, -6], fov: 38 },
@@ -574,7 +583,7 @@ let camDirty = false; // the camera was dragged away from the preset view: put i
 function setView(v, animate = true) {
   state.view = v; camDirty = false;
   const plan = v === 'plan';
-  document.getElementById('north').hidden = !plan;
+  document.getElementById('legend').hidden = !plan;
   if (plan) { camera = ortho; controls.enabled = false; move = null; ortho.position.set(0, 120, 2.5); ortho.up.set(0, 0, -1); ortho.lookAt(0, 0, 2.5); }
   else {
     const s = VIEWS[v];
@@ -615,8 +624,7 @@ function apply() {
   headMat.emissiveIntensity = on ? 3 : 0; spots.forEach((s) => (s.intensity = on ? 70 : 0));
   controls.autoRotate = state.spin && camera === persp;
   // measurements
-  gridMesh.visible = dimGroup.visible = state.grid; labelsEl.hidden = !state.grid; courtDims.visible = !today;
-  document.getElementById('legend').hidden = !state.grid;
+  dimGroup.visible = state.grid; gridMesh.visible = state.grid && !today; labelsEl.hidden = !state.grid; courtDims.visible = !today;
   const low = state.dividers === 'ft3' ? 3 * FT : LOW_H;
   fenceLbl.text = fenceLbl.el.textContent = state.dividers === 'ft3' ? '3 ft fence' : '4 ft fence'; fenceLbl.at.y = low + .35;
   for (const d of dimLabels) d.off = d.court && today;
@@ -661,7 +669,7 @@ function readURL() {
   let v = (q.get('view') || location.hash.slice(1) || 'aerial').toLowerCase(); v = VIEW_ALIAS[v] || v;
   state.view = v in VIEWS || v === 'plan' ? v : 'aerial';
   state.mode = q.get('mode') === 'today' ? 'today' : 'proposed';
-  state.grid = b('grid', false); state.units = (q.get('units') || '').toLowerCase().startsWith('f') ? 'ft' : 'm';
+  state.grid = b('grid', false); state.units = (q.get('units') || '').toLowerCase().startsWith('m') ? 'm' : 'ft';
   const f = (q.get('fence') || '4').toLowerCase(); state.dividers = ['0', 'none', 'off', 'no', 'false'].includes(f) ? 'none' : f.startsWith('3') ? 'ft3' : 'ft4';
   for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) state[k] = b(k, DEF[k]);
   if (!q.has('dusk')) state.dusk = state.lights;
@@ -674,7 +682,7 @@ function writeURL() {
   if (state.mode !== DEF.mode) q.set('mode', state.mode);
   if (state.view !== 'aerial') q.set('view', VIEW_NAME[state.view] || state.view);
   if (state.grid) q.set('grid', '1');
-  if (state.units === 'ft') q.set('units', 'ft');
+  if (state.units === 'm') q.set('units', 'm');
   if (state.dividers !== 'ft4') q.set('fence', state.dividers === 'none' ? '0' : '3');
   for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) if (state[k] !== DEF[k] && !(k === 'dusk' && state.dusk === state.lights)) q.set(k, state[k] ? '1' : '0');
   if (state.palette !== 'classic') q.set('colour', state.palette);
@@ -694,9 +702,9 @@ document.getElementById('save').onclick = () => {
     g.font = `500 ${11 * k}px "IBM Plex Mono", monospace`; g.textAlign = 'center'; g.textBaseline = 'middle';
     for (const d of dimLabels) {
       if (!d.vis) continue;
-      const x = d.x * k, y = d.y * k, tw = g.measureText(d.text).width + 10 * k, edge = d.el.classList.contains('edge');
-      g.fillStyle = edge ? 'rgba(28,24,6,.78)' : 'rgba(255,255,255,.93)'; g.fillRect(x - tw / 2, y - 9 * k, tw, 18 * k);
-      g.fillStyle = edge ? '#ffe36e' : '#1d2620'; g.fillText(d.text, x, y);
+      const x = d.x * k, y = d.y * k, tw = g.measureText(d.text).width + 10 * k, edge = d.el.classList.contains('total');
+      g.fillStyle = edge ? '#1d2620' : 'rgba(255,255,255,.93)'; g.fillRect(x - tw / 2, y - 9 * k, tw, 18 * k);
+      g.fillStyle = edge ? '#fff' : '#1d2620'; g.fillText(d.text, x, y);
     }
   }
   g.font = `400 ${10 * k}px "Public Sans", sans-serif`; g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.fillStyle = '#fff'; g.shadowColor = '#000a'; g.shadowBlur = 3 * k;
