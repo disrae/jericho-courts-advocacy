@@ -64,7 +64,7 @@ a.th:hover span { text-decoration: underline; }
 a.dl { font: 600 13px var(--body); color: var(--accent-ink); background: var(--accent); border-radius: 7px; padding: 9px 12px; text-decoration: none; }
 /* side bar on wide screens: buttons stacked, on/off items drawn as switches */
 @media (min-width: 761px) {
-  #tools { left: max(12px, env(safe-area-inset-left, 0px)); top: 50%; bottom: auto; transform: translateY(-50%); flex-direction: column; flex-wrap: nowrap; align-items: stretch; width: 132px; max-height: calc(100% - 24px); overflow-y: auto; }
+  #tools { left: max(12px, env(safe-area-inset-left, 0px)); top: 50%; bottom: auto; transform: translateY(-50%); flex-direction: column; flex-wrap: nowrap; align-items: stretch; width: 124px; max-height: calc(100% - 24px); overflow-y: auto; }
   #tools button { text-align: left; }
   #tools .sep { width: auto; height: 1px; margin: 4px 6px; }
   #tools [data-u] { display: inline-block; }
@@ -104,23 +104,9 @@ body.clean #legend { top: 12px; }
       <button id="picsBtn">Pictures</button>
     </div>
     <div class="bar" id="tools">
-      <button data-m="today">Today</button>
-      <button data-m="proposed">Proposed</button>
-      <span class="sep"></span>
-      <button data-v="aerial">Aerial</button>
-      <button data-v="aerial-west">West</button>
-      <button data-v="plan">Above</button>
-      <button data-v="court">Courtside</button>
-      <button data-v="wide">Park</button>
-      <span class="sep"></span>
       <button data-t="grid">Grid</button>
-      <span class="units"><button data-u="m">m</button><button data-u="ft">ft</button></span>
-      <span class="sep"></span>
       <button data-t="players">Players</button>
-      <button data-t="fence">Fence</button>
       <button data-t="lights">Lights</button>
-      <button data-t="dusk">Dusk</button>
-      <button data-t="spin">Spin</button>
     </div>
   </main>
 </div>
@@ -678,6 +664,7 @@ function readURL() {
   state.grid = b('grid', false); state.units = (q.get('units') || '').toLowerCase().startsWith('f') ? 'ft' : 'm';
   const f = (q.get('fence') || '4').toLowerCase(); state.dividers = ['0', 'none', 'off', 'no', 'false'].includes(f) ? 'none' : f.startsWith('3') ? 'ft3' : 'ft4';
   for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) state[k] = b(k, DEF[k]);
+  if (!q.has('dusk')) state.dusk = state.lights;
   const c = q.get('colour') || q.get('color'); if (PALETTES.some((p) => p.id === c)) state.palette = c;
   const cam = (q.get('cam') || '').split(',').map(Number); customCam = cam.length === 7 && cam.every(Number.isFinite) ? cam : null;
   if (q.get('ui') === '0') document.body.classList.add('clean');
@@ -689,7 +676,7 @@ function writeURL() {
   if (state.grid) q.set('grid', '1');
   if (state.units === 'ft') q.set('units', 'ft');
   if (state.dividers !== 'ft4') q.set('fence', state.dividers === 'none' ? '0' : '3');
-  for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) if (state[k] !== DEF[k]) q.set(k, state[k] ? '1' : '0');
+  for (const k of ['screen', 'players', 'lights', 'dusk', 'spin']) if (state[k] !== DEF[k] && !(k === 'dusk' && state.dusk === state.lights)) q.set(k, state[k] ? '1' : '0');
   if (state.palette !== 'classic') q.set('colour', state.palette);
   if (camDirty && camera === persp && !state.spin) q.set('cam', [...persp.position.toArray(), ...controls.target.toArray()].map((n) => n.toFixed(1)).concat(Math.round(persp.fov)).join(','));
   if (document.body.classList.contains('clean')) q.set('ui', '0');
@@ -738,7 +725,8 @@ document.querySelectorAll('[data-v]').forEach((b) => (b.onclick = () => setView(
 document.querySelectorAll('[data-u]').forEach((b) => (b.onclick = () => { state.units = b.dataset.u; apply(); }));
 document.querySelectorAll('[data-t]').forEach((b) => (b.onclick = () => {
   const t = b.dataset.t;
-  if (t === 'fence') state.dividers = state.dividers === 'none' ? 'ft4' : 'none'; else state[t] = !state[t];
+  state[t] = !state[t];
+  if (t === 'lights') state.dusk = state.lights; // lights only make sense after dark
   apply();
 }));
 window.addEventListener('hashchange', () => { const v = VIEW_ALIAS[location.hash.slice(1)] || location.hash.slice(1); if (v in VIEWS || v === 'plan') setView(v); });
