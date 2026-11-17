@@ -469,7 +469,7 @@ const headMat = new THREE.MeshStandardMaterial({ color: '#222', emissive: '#fff6
 const northFence = new THREE.Group(); scene.add(northFence);
 fenceRect(northFence, NORTH_PAD.cx - NORTH_PAD.w / 2, -PAD_L / 2 - NORTH_PAD.l, NORTH_PAD.cx + NORTH_PAD.w / 2, -PAD_L / 2 - .02, FENCE_H);
 
-// ---------- measurements (Grid button): court outlines with their size, and the size of the whole pad ----------
+// ---------- measurements (Grid button): a box for each court's share of the pad with its size, and the size of the whole pad ----------
 const dimGroup = new THREE.Group(); dimGroup.visible = false; scene.add(dimGroup);
 const courtDims = new THREE.Group(); dimGroup.add(courtDims);
 const dimMat = new THREE.LineBasicMaterial({ color: '#ffffff', depthTest: false, transparent: true });
@@ -498,7 +498,7 @@ const xs = [-PAD_W / 2], zs = [-PAD_L / 2];
 for (let c = 0; c < COLS; c++) xs.push(courts[c].x - CW / 2, courts[c].x + CW / 2);
 for (let r = 0; r < ROWS; r++) zs.push(courts[r * COLS].z - CL / 2, courts[r * COLS].z + CL / 2);
 xs.push(PAD_W / 2); zs.push(PAD_L / 2);
-const courtLbls = courts.map((c) => label('', new THREE.Vector3(c.x, TOP, c.z + CL / 4), { court: true }));
+const courtLbls = courts.map((c) => label('', new THREE.Vector3(c.x, TOP, c.z + (c.z > 0 ? 1 : -1) * (CL / 2 + (BAY_L - CL) / 4)), { court: true }));
 // the whole place
 chain('x', [-PAD_W / 2, PAD_W / 2], PAD_L / 2 + 4.6, { both: true, cls: 'total' });
 chain('z', [-PAD_L / 2, PAD_L / 2], PAD_W / 2 + 2.2, { both: true, cls: 'total' });
@@ -510,9 +510,9 @@ function buildGrid() {
     const ft = ftOf(c.len) + ' ft', m = mOf(c.len) + ' m';
     c.d.text = c.d.el.textContent = c.pre + (c.both ? (state.units === 'm' ? `${m} · ${ft}` : `${ft} · ${m}`) : state.units === 'm' ? m : ft);
   }
-  for (const d of courtLbls) d.text = d.el.textContent = state.units === 'm' ? '6.1 × 13.4 m' : '20 × 44 ft';
+  for (const d of courtLbls) d.text = d.el.textContent = state.units === 'm' ? `${BAY_W.toFixed(1)} × ${BAY_L.toFixed(1)} m` : `${(BAY_W / FT).toFixed(1)} × ${(BAY_L / FT).toFixed(1)} ft`;
 }
-// court outlines, drawn to a texture on the ground
+// the boxes, drawn to a texture on the ground
 const GM = 3, GW = PAD_W + 2 * GM, GH = PAD_L + 2 * GM;
 const gridCanvas = document.createElement('canvas'); gridCanvas.width = 2048; gridCanvas.height = Math.round(2048 * GH / GW);
 const gridTex = new THREE.CanvasTexture(gridCanvas); gridTex.anisotropy = maxAniso; gridTex.colorSpace = THREE.SRGBColorSpace;
@@ -522,8 +522,8 @@ gridMesh.rotation.x = -Math.PI / 2; gridMesh.position.y = TOP + .025; gridMesh.r
 {
   const g = gridCanvas.getContext('2d'), W = gridCanvas.width, H = gridCanvas.height, k = W / GW;
   const X = (x) => (x + GW / 2) * k, Z = (z) => (z + GH / 2) * k;
-  // a bright outline just outside each court's own white lines
-  const outline = (w, style) => { g.strokeStyle = style; g.lineWidth = w * k; for (const c of courts) { const o = .12; g.strokeRect(X(c.x - CW / 2 - o), Z(c.z - CL / 2 - o), (CW + 2 * o) * k, (CL + 2 * o) * k); } };
+  // each court's equal share of the pad: 4 across, 2 down, boxes drawn just inside their edges so neighbours read as separate
+  const outline = (w, style) => { g.strokeStyle = style; g.lineWidth = w * k; for (const c of courts) { const o = .2; g.strokeRect(X(c.x - BAY_W / 2 + o), Z(c.z - BAY_L / 2 + o), (BAY_W - 2 * o) * k, (BAY_L - 2 * o) * k); } };
   outline(.2, 'rgba(0,0,0,.3)'); outline(.12, '#ffe36e');
   g.globalCompositeOperation = 'destination-in';
   for (const horiz of [true, false]) {
