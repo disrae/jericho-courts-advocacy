@@ -504,12 +504,12 @@ xs.push(PAD_W / 2); zs.push(PAD_L / 2);
 const chunkW = courts.map((c) => label('', new THREE.Vector3(c.x, TOP, c.z > 0 ? PAD_L / 2 - 1 : -PAD_L / 2 + 1), { court: true }));
 const chunkL = courts.map((c) => label('', new THREE.Vector3(c.x - BAY_W / 2 + 1, TOP, c.z), { court: true }));
 // the spacing between neighbouring courts: sideline to sideline across each row (toward the outer fence, clear of the
-// chunk labels), and baseline to baseline between the two rows (down each column)
+// chunk labels), and from each row's baseline back to the middle fence (down each column)
 for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS - 1; c++) {
   const a = courts[r * COLS + c], b = courts[r * COLS + c + 1];
   chain('x', [a.x + CW / 2, b.x - CW / 2], a.z + Math.sign(a.z) * 4.5, { court: true, prio: 0 });
 }
-for (let c = 0; c < COLS; c++) chain('z', [courts[c].z + CL / 2, courts[COLS + c].z - CL / 2], courts[c].x, { court: true, prio: 0 });
+for (let c = 0; c < COLS; c++) chain('z', [courts[c].z + CL / 2, 0, courts[COLS + c].z - CL / 2], courts[c].x, { court: true, prio: 0 });
 // the whole place
 chain('x', [-PAD_W / 2, PAD_W / 2], PAD_L / 2 + 2.6, { cls: 'total' });
 chain('z', [-PAD_L / 2, PAD_L / 2], PAD_W / 2 + 2.6, { cls: 'total' });
